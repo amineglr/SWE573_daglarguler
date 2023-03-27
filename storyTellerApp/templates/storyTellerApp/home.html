@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block "css_files" %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
+{% endblock %} 
+
+{% block content %}
+<header id="main-navigation">
+    <h1><a href=""> StoryTeller</a></h1>
+    <nav><a href=""> Stories</a></nav>
+</header>
+
+
+<section id="welcome">
+    <h1>Welcome to StoryTeller</h1>
+    <header>
+        <img src="" alt="StoryTeller -Logo" />
+        <h2>StoryTeller</h2>
+    </header>
+    <p>
+        Welcome! This is a storytelling website that you can share your living stories, follow other storytellers.
+    </p>
+</section>
+<section id="latest-posts">
+    <article>
+        <li>
+            <ul>
+                <a href="">
+                    <div>
+                        <p>
+                            Example article.
+                        </p>
+                    </div>
+                </a>
+            </ul>
+        </li>
+    </article>
+</section>
+
+{% endblock %}
