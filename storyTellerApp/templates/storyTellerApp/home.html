@@ -5,41 +5,36 @@
     StoryTeller
 {% endblock %}
 
-{% block "css_files" %}
+{% block css_files %}
     <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
 {% endblock %} 
 
 {% block content %}
 <header id="main-navigation">
-    <h1><a href=""> StoryTeller</a></h1>
+    <h1>StoryTeller</h1>
+    <nav><a href=""> Home</a></nav>
     <nav><a href=""> Stories</a></nav>
+    <nav><a href=""> My Stories</a></nav>
+    <nav><a href=""> Liked Stories</a></nav>
+    <nav><a href=""> Add Stories</a></nav>
+    <nav><a href=""> Search</a></nav>
+    <nav><a href=""> Signup</a></nav>
+    <nav><a href=""> Login</a></nav>
 </header>
 
-
-<section id="welcome">
-    <h1>Welcome to StoryTeller</h1>
-    <header>
-        <img src="" alt="StoryTeller -Logo" />
-        <h2>StoryTeller</h2>
-    </header>
-    <p>
-        Welcome! This is a storytelling website that you can share your living stories, follow other storytellers.
-    </p>
+<section id="recent-stories">
+    <h3>Recent Stories</h3>
 </section>
 <section id="latest-posts">
-    <article>
-        <li>
-            <ul>
-                <a href="">
-                    <div>
-                        <p>
-                            Example article.
-                        </p>
-                    </div>
-                </a>
-            </ul>
-        </li>
-    </article>
+        <a href="">
+             <div>
+                <img src="img_story.jpg" alt="Story Image" id="story-image">
+                <p> </p>
+                <p>
+                    Example story.
+                </p>
+            </div>
+          </a>
 </section>
 
 {% endblock %}

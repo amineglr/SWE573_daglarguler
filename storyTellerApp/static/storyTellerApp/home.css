@@ -1,5 +1,5 @@
-#welcome {
-    background: linear-gradient(to right top, #6305dd, #390281);
+/* #welcome {
+    background:  white;
     padding: 6rem 12%;
   }
   
@@ -16,7 +16,6 @@
     border: 5px solid white;
     border-radius: 12px;
     background-color: #ffe1bf;
-    transform: rotateZ(-5deg);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
   
@@ -31,52 +30,67 @@
     margin: 0 0 0 2rem;
     color: #e70000;
     width: 10rem;
-  }
+  } 
   
   #welcome p {
     color: white;
     font-size: 1.5rem;
   }
-  
-  #latest-posts {
-    background-color: rgb(108, 51, 51);
-    padding: 2rem;
-    border-radius: 12px;
-    width: 60rem;
-    margin: -6rem auto 2rem auto;
-    box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
-  }
-  
-  #latest-posts h2 {
-    text-align: center;
-    color:rgb(108, 51, 51)
-  }
-  
-  #latest-posts ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  #latest-posts li {
-    flex: 1;
-  }
-  
+*/
 
-  #about {
-    text-align: center;
-    padding: 3rem;
-    background-color: #e48900;
-    margin-top: 5rem;
-  }
-  
-  #about h2 {
-    font-size: 3rem;
-  }
-  
-  #about p {
-    font-size: 1.5rem;
-    color: #353535;
-  }
+#logo {
+  font-size: 3.5rem;
+  color: #0045e7;
+  width: 10rem;
+  padding-right: 10%;
+}
+
+#recent-stories {
+  background: white;
+  margin-top: 10rem; 
+  margin-left: 10rem;
+}
+
+#recent-stories h3 {
+  text-align: left;
+  color: #0045e7;
+
+}
+
+#latest-posts {
+  background-color: #4d75ed;
+  border-radius: 12px;
+  width: 20rem;
+  height: 20rem;
+  margin-top: 2rem; 
+  margin-left: 10rem;
+  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+#latest-posts p {
+  text-align: center;
+  color: rgb(254, 254, 254);
+}
+
+#story-image {
+  width: 20rem;
+  height: 10rem;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+}
+
+#about {
+  text-align: center;
+  padding: 3rem;
+  background-color: #e48900;
+  margin-top: 5rem;
+}
+
+#about h2 {
+  font-size: 3rem;
+}
+
+#about p {
+  font-size: 1.5rem;
+  color: #353535;
+}
