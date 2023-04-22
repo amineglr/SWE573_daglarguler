@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from decouple import config
 from pathlib import Path
 
@@ -141,3 +142,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GDAL_LIBRARY_PATH = "/opt/homebrew/Cellar/gdal/3.6.4/lib/libgdal.dylib"
 GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.11.2/lib/libgeos_c.1.17.2.dylib"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
