@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.gis.db import models
 
 # Create your models here.
 
@@ -20,4 +21,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
     
