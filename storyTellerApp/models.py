@@ -8,7 +8,7 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_id = models.IntegerField()
+    id_user = models.IntegerField()
     first_name = models.CharField(max_length=100, default="")
     last_name = models.CharField(max_length=100,  default="")
     username = models.CharField(max_length=50, unique=True, default="")
@@ -18,4 +18,6 @@ class Profile(models.Model):
         upload_to='profile_picture', default='')
     bio = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.user.username
     
