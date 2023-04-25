@@ -37,6 +37,34 @@
     font-size: 1.5rem;
   }
 */
+* {
+  box-sizing: border-box;
+}
+
+.grid-container {
+  display: grid;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 75%;
+  padding: 0 10px;
+}
+
+/* Clear floats after the columns */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+}
 
 #logo {
   font-size: 3.5rem;
@@ -56,6 +84,14 @@
   color: #0045e7;
 
 }
+#posts {
+  background-color: #4d75ed;
+  border-radius: 12px;
+  width: 80rem;
+  height: 20rem;
+  margin-top: 2rem; 
+  margin-left: 10rem;
+}
 
 #latest-posts {
   background-color: #4d75ed;
@@ -64,16 +100,18 @@
   height: 20rem;
   margin-top: 2rem; 
   margin-left: 10rem;
-  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
+ 
 }
+
+
 
 #latest-posts p {
   text-align: center;
-  color: rgb(254, 254, 254);
+  color: rgb(254, 254, 0);
 }
 
 #story-image {
-  width: 20rem;
+  width: 100px;
   height: 10rem;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
