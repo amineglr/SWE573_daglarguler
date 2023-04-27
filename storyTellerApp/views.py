@@ -40,7 +40,7 @@ def home_page(request):
 
 
 def stories(request):
-    pass
+    return render( request, "storyTellerApp/stories.html")
 
 
 def view_story(request):

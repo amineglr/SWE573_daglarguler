@@ -6,32 +6,20 @@
 {% endblock %}
 
 {% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/story_preview.css' %}">
     <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
 {% endblock %} 
 
 {% block content %}
-<header id="main-navigation">
-    <h1>StoryTeller</h1>
-    <nav><a href=""> Home</a></nav>
-    <nav><a href=""> Stories</a></nav>
-    <nav><a href=""> My Stories</a></nav>
-    <nav><a href=""> Liked Stories</a></nav>
-    <nav><a href=""> Add Stories</a></nav>
-    <nav><a href=""> Search</a></nav>
-    <nav><a href=""> Signup</a></nav>
-    <nav><a href=""> Login</a></nav>
-</header>
-<section id="latest-posts">
 
-               <img src="img_story.jpg" alt="Story Image" id="story-image">
-               <p> </p>
-               <p>
-                   Example story.
-               </p>
-      
-      
-               
-    
+<section id="all-posts">
+    <ul>
+        {% include "storyTellerApp/includes/story_preview.html"%}
+        {% include "storyTellerApp/includes/story_preview.html"%}
+        {% include "storyTellerApp/includes/story_preview.html"%}
+        {% include "storyTellerApp/includes/story_preview.html"%}
+    </ul>
+
 </section>
 
 

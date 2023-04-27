@@ -1,78 +1,3 @@
-/* #welcome {
-    background:  white;
-    padding: 6rem 12%;
-  }
-  
-  #welcome header {
-    display: flex;
-    margin: 3rem auto;
-  }
-  
-  #welcome img {
-    width: 10rem;
-    height: 10rem;
-    object-fit: cover;
-    object-position: top;
-    border: 5px solid white;
-    border-radius: 12px;
-    background-color: #ffe1bf;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  }
-  
-  #welcome h1 {
-    font-size: 3.5rem;
-    margin: 0 0 0 2rem;
-    color: #e70000;
-    width: 10rem;
-  }
-  #welcome h2 {
-    font-size: 3.5rem;
-    margin: 0 0 0 2rem;
-    color: #e70000;
-    width: 10rem;
-  } 
-  
-  #welcome p {
-    color: white;
-    font-size: 1.5rem;
-  }
-*/
-* {
-  box-sizing: border-box;
-}
-
-.grid-container {
-  display: grid;
-}
-
-/* Float four columns side by side */
-.column {
-  float: left;
-  width: 75%;
-  padding: 0 10px;
-}
-
-/* Clear floats after the columns */
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  padding: 16px;
-  text-align: center;
-}
-
-#logo {
-  font-size: 3.5rem;
-  color: #0045e7;
-  width: 10rem;
-  padding-right: 10%;
-}
-
 #recent-stories {
   background: white;
   margin-top: 10rem; 
@@ -84,13 +9,19 @@
   color: #0045e7;
 
 }
-#posts {
-  background-color: #4d75ed;
-  border-radius: 12px;
-  width: 80rem;
-  height: 20rem;
-  margin-top: 2rem; 
-  margin-left: 10rem;
+
+#all-posts {
+  margin: 7rem auto;
+  width: 50%;
+  max-width: 60rem;
+  margin-right: 10rem;
+}
+
+#all-posts h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2e2e2e;
+  margin: 3rem 0;
 }
 
 #latest-posts {
@@ -103,32 +34,9 @@
  
 }
 
-
-
 #latest-posts p {
   text-align: center;
   color: rgb(254, 254, 0);
 }
 
-#story-image {
-  width: 100px;
-  height: 10rem;
-  border-top-right-radius: 12px;
-  border-top-left-radius: 12px;
-}
 
-#about {
-  text-align: center;
-  padding: 3rem;
-  background-color: #e48900;
-  margin-top: 5rem;
-}
-
-#about h2 {
-  font-size: 3rem;
-}
-
-#about p {
-  font-size: 1.5rem;
-  color: #353535;
-}
