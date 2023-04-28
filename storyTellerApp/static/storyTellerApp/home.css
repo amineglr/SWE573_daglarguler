@@ -11,10 +11,8 @@
 }
 
 #all-posts {
-  margin: 7rem auto;
+  margin: 1rem 1rem 1rem 1rem;
   width: 50%;
-  max-width: 60rem;
-  margin-right: 10rem;
 }
 
 #all-posts h2 {
@@ -23,20 +21,4 @@
   color: #2e2e2e;
   margin: 3rem 0;
 }
-
-#latest-posts {
-  background-color: #4d75ed;
-  border-radius: 12px;
-  width: 20rem;
-  height: 20rem;
-  margin-top: 2rem; 
-  margin-left: 10rem;
- 
-}
-
-#latest-posts p {
-  text-align: center;
-  color: rgb(254, 254, 0);
-}
-
 

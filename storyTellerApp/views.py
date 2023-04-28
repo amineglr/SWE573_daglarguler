@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse
 from django.template.loader import render_to_string
+from datetime import date
 # Create your views here.
 
 pages_list = {
@@ -12,6 +13,36 @@ pages_list = {
     "search": "Search",
     "addstories": "Add Stories",
 }
+
+all_stories = [
+    {
+        "slug" : "1",
+        "author" : "amineglr",
+        "date" : date(2023, 4,28),
+        "title" :"Travel With Train",
+        "excerpt" : "Summary",
+        "content" : " example story", 
+
+    },
+    {
+        "slug" : "2",
+        "author" : "amineglr",
+        "date" : date(2022, 4,28),
+        "title" :"Travel With Bus",
+        "excerpt" : "Summary",
+        "content" : " example story", 
+
+    },
+    {
+        "slug" : "3",
+        "author" : "amineglr",
+        "date" : date(2022, 4,28),
+        "title" :"Travel With Bus",
+        "excerpt" : "Summary",
+        "content" : " example story", 
+
+    }
+]
 
 
 def index(request):
@@ -34,17 +65,21 @@ def pages(request, page):
     except:
         HttpResponseNotFound("Page not found!")
 
+def get_date(story):
+    return story['date']
 
 def home_page(request):
-    return render(request, "storyTellerApp/home.html")
+    sorted_stories = sorted(all_stories, key=get_date)
+    latest_stories= sorted_stories[-10:]
+    return render(request, "storyTellerApp/home.html",{ "stories" : latest_stories} )
 
 
 def stories(request):
     return render( request, "storyTellerApp/stories.html")
 
 
-def view_story(request):
-    pass
+def view_story(request, slug):
+    return render(request, "storyTellerApp/story.html")
 
 
 def editstories(request):

@@ -21,8 +21,7 @@
 
 #post a:hover,
 #post a:active {
-    transform: scale(1.1);
-    background-color: #390281;
+    background-color: #4d75ed;
     color: white;
   }
   
@@ -50,28 +49,13 @@
 #post:active time {
     color: white;
   }
-
-#story-image {
-
-    border-top-right-radius: 12px;
-    border-top-left-radius: 12px;
-  }
-#posts {
-    background-color: #4d75ed;
-    border-radius: 12px;
-    margin-top: 2rem; 
-    margin-left: 10rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+  
 ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(1rem, 1fr));
+    grid-template-columns: repeat(3, minmax(1.5rem, 1fr));
     gap: 1.5rem;
     width: 90%;
     

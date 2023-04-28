@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block css_files %}
-    <link rel="stylesheet" href="{% static 'storyTellerApp/story_preview.css' %}">
+    <link rel="stylesheet" href="{% static 'storyTellerApp/storypreview.css' %}">
     <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
 {% endblock %} 
 
@@ -18,10 +18,10 @@
 </div>
 <section id="all-posts">
     <ul>
-        {% include "storyTellerApp/includes/story_preview.html"%}
-        {% include "storyTellerApp/includes/story_preview.html"%}
-        {% include "storyTellerApp/includes/story_preview.html"%}
-        {% include "storyTellerApp/includes/story_preview.html"%}
+        {% for story in stories %}
+            {% include "storyTellerApp/includes/story_preview.html"%}
+        {% endfor %}
+        
     </ul>
 
 </section>

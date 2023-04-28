@@ -1,11 +1,12 @@
 {% load static %}
 
 <li>
+    <a href="{% url "view_story" story.slug %}">
     <div id="post">
-     
-        <img src="img_story.jpg" alt="Story Image" id="img">
+        <img src="" alt="{{ story.title }}" id="img">
+        <h3>{{ story.title }}</h3>
         <p>
-            Example story.
+            {{ story.excerpt }}
      </p>
-    </div> 
+    </div> </a>
 </li>

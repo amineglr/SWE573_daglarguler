@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/story.css' %}">
+{% endblock %} 
+
+{% block content %}
+    
+    <section id="storyview">
+        <h2>Story Title </h2>
+        <article>
+            <adress> By user </adress>
+            <div>
+                Upload time <time>May 26</time>
+            </div>
+        </article>
+        <img src="" alt="img story"/>
+        <p> Example Story </p>
+    </section>
+
+{% endblock %}
