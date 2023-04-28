@@ -6,5 +6,5 @@ urlpatterns = [
     # path("<str:page>", views.pages, name="pages"),
     path("", views.home_page, name="home_page"),
     path("stories", views.stories, name="stories_page"),
-    path("stories/<slug:slug>", views.view_story, name="view_story"),
+    path("stories/<slug:id>", views.view_story, name="view_story"),
 ]

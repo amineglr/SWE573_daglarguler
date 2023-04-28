@@ -14,12 +14,18 @@
     <section id="storyview">
         <h2> {{ story.title }} </h2>
         <article>
-            <adress> {{ story.author }} </adress>
+            <adress> <a href="">{{ story.user }} </a></adress>
             <div>
-                Upload time <time>{{ story.date|date:"d M Y" }}</time>
+                Upload time <time>{{ story.created_at|date:"d M Y" }}</time>
             </div>
         </article>
         <img src="" alt={{ story.title }}/>
+        <div id="tag-area"> 
+            {%for tag in story_tags %}
+            <span class="tag">{{tag.name}} </span>
+            {% endfor %}
+
+        </div>
         <p> {{ story.content|linebreaks }} </p>
     </section>
 

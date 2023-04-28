@@ -1,12 +1,12 @@
 {% load static %}
 
 <li>
-    <a href="{% url "view_story" story.slug %}">
+    <a href="{% url "view_story" story.id %}">
     <div id="post">
         <img src="" alt="{{ story.title }}" id="img">
         <h3>{{ story.title }}</h3>
         <p>
-            {{ story.excerpt }}
+            {{ story.content|slice:"0:100"|add:"..."}}
      </p>
     </div> </a>
 </li>

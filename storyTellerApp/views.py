@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse
 from django.template.loader import render_to_string
 from datetime import date
+from .models import Story
 # Create your views here.
 
 pages_list = {
@@ -13,37 +14,6 @@ pages_list = {
     "search": "Search",
     "addstories": "Add Stories",
 }
-
-all_stories = [
-    {
-        "slug" : "1",
-        "author" : "amineglr",
-        "date" : date(2023, 4,28),
-        "title" :"Travel With Train",
-        "excerpt" : "Summary",
-        "content" : " example story", 
-
-    },
-    {
-        "slug" : "2",
-        "author" : "amineglr",
-        "date" : date(2022, 4,28),
-        "title" :"Travel With Bus",
-        "excerpt" : "Summary",
-        "content" : " example story", 
-
-    },
-    {
-        "slug" : "3",
-        "author" : "amineglr",
-        "date" : date(2022, 8,28),
-        "title" :"Travel With Car",
-        "excerpt" : "Summary",
-        "content" : " example story", 
-
-    }
-]
-
 
 def index(request):
     list_items = ""
@@ -65,24 +35,21 @@ def pages(request, page):
     except:
         HttpResponseNotFound("Page not found!")
 
-def get_date(story):
-    return story['date']
 
 def home_page(request):
-    sorted_stories = sorted(all_stories, key=get_date)
-    latest_stories= sorted_stories[-10:]
+    latest_stories = Story.objects.all().order_by("-created_at")[:10]
     return render(request, "storyTellerApp/home.html",{ "stories" : latest_stories} )
 
 
 def stories(request):
     return render( request, "storyTellerApp/stories.html", {
-        "all_stories" : all_stories
+        "all_stories" : Story.objects.all().order_by("-created_at")
     })
 
 
-def view_story(request, slug):
-    identified_story= next(story for story in all_stories if(story['slug'] == slug) )
-    return render(request, "storyTellerApp/story.html", {"story": identified_story})
+def view_story(request, id):
+    identified_story = Story.objects.get(id=id)
+    return render(request, "storyTellerApp/story.html", {"story": identified_story, "story_tags" : identified_story.tags.all()})
 
 
 def editstories(request):

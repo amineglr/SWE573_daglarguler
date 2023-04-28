@@ -14,7 +14,7 @@
   
 #post a {
     text-decoration: none;
-    color: black;
+    color: white;
     transition: all 0.2s ease;
     padding: 1rem;  
 }
@@ -23,6 +23,7 @@
 #post a:active {
     background-color: #4d75ed;
     color: white;
+    text-decoration: none;
   }
   
 #post img {
@@ -36,6 +37,11 @@
   
 #post h3 {
     margin: 0.25rem 0;
+    color: white;
+  }
+
+#post p {
+    color: white;
   }
   
 #post time {
