@@ -12,15 +12,15 @@
 {% block content %}
     
     <section id="storyview">
-        <h2>Story Title </h2>
+        <h2> {{ story.title }} </h2>
         <article>
-            <adress> By user </adress>
+            <adress> {{ story.author }} </adress>
             <div>
-                Upload time <time>May 26</time>
+                Upload time <time>{{ story.date|date:"d M Y" }}</time>
             </div>
         </article>
-        <img src="" alt="img story"/>
-        <p> Example Story </p>
+        <img src="" alt={{ story.title }}/>
+        <p> {{ story.content|linebreaks }} </p>
     </section>
 
 {% endblock %}

@@ -36,8 +36,8 @@ all_stories = [
     {
         "slug" : "3",
         "author" : "amineglr",
-        "date" : date(2022, 4,28),
-        "title" :"Travel With Bus",
+        "date" : date(2022, 8,28),
+        "title" :"Travel With Car",
         "excerpt" : "Summary",
         "content" : " example story", 
 
@@ -75,11 +75,14 @@ def home_page(request):
 
 
 def stories(request):
-    return render( request, "storyTellerApp/stories.html")
+    return render( request, "storyTellerApp/stories.html", {
+        "all_stories" : all_stories
+    })
 
 
 def view_story(request, slug):
-    return render(request, "storyTellerApp/story.html")
+    identified_story= next(story for story in all_stories if(story['slug'] == slug) )
+    return render(request, "storyTellerApp/story.html", {"story": identified_story})
 
 
 def editstories(request):
