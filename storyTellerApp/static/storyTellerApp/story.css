@@ -34,7 +34,7 @@ body {
   #main-navigation h1 a:hover,
   #main-navigation h1 a:active {
     color: rgb(255, 255, 255);
-  }
+  }    
 #storyview {
     margin: 8rem auto 3rem auto;
     padding: 1rem;
@@ -77,6 +77,9 @@ body {
     color: white;
     transition: all 0.2s ease;
     padding: 1rem;  
+}
+a{
+  text-decoration: none;
 }
 
 .tag{

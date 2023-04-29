@@ -12,20 +12,12 @@
     height: 20rem;
  }
   
-#post a {
+ #post a {
     text-decoration: none;
-    color: white;
     transition: all 0.2s ease;
-    padding: 1rem;  
+    padding: 2rem;  
 }
 
-#post a:hover,
-#post a:active {
-    background-color: #4d75ed;
-    color: white;
-    text-decoration: none;
-  }
-  
 #post img {
     width: 5rem;
     height: 5rem;
