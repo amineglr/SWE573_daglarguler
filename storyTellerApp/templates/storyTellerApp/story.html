@@ -19,14 +19,14 @@
     <nav><a href=""> Liked Stories</a></nav>
     <nav><a href=""> Add Stories</a></nav>
     <nav><a href=""> Search</a></nav>
-    <nav><a href="{% url "signup" %}"> Signup</a></nav>
-    <nav><a href="{% url "login" %}"> Login</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout</a></nav>
 </header>
     
     <section id="storyview">
         <h2> {{ story.title }} </h2>
         <article>
-            <adress> <a href="">{{ story.user }} </a></adress>
+             
+            <a href=""><adress>{{ story.user }} </adress></a>
             <div>
                 Upload time <time>{{ story.created_at|date:"d M Y" }}</time>
             </div>

@@ -1,3 +1,6 @@
+body {
+  background-color: #e7e7e7;
+}
 #post {
     display: flex;
     flex-direction: column;
@@ -12,7 +15,7 @@
     height: 20rem;
  }
   
- #post a {
+#post a {
     text-decoration: none;
     transition: all 0.2s ease;
     padding: 2rem;  
