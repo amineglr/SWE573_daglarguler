@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/signup.css' %}">
+{% endblock %} 
+
+{% block content %}
+
+<div id="title">
+    <a href="{% url "home_page" %}"><h1>StoryTeller</h1></a>
+
+</div>
+
+<div id="signup">
+    <div id="signup-form">
+        <h2> Sign Up</h2>
+            <form action="home.html">
+                <input type="text" placeholder="Username" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                <input type="text" placeholder="Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                <input type="text" placeholder="Confirm Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                <button type="submit" class="bg-gradient-to-br from-pink-500 py-3 rounded-md text-white text-xl to-red-400 w-full">Sign Up</button>
+                <div class="text-center mt-5 space-x-2">
+                    <p class="text-base"> Do you have an account? <a href="{% url "login" %}"> Login </a></p>
+                </div>
+            </form>
+    </div>        
+</div>
+
+
+{% endblock %}

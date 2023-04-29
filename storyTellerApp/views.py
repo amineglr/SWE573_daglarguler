@@ -58,3 +58,10 @@ def editstories(request):
 
 def location(request):
     return HttpResponse("Location")
+
+def signup(request):
+    return render(request, 'storyTellerApp/signup.html')
+
+
+def login(request):
+    return render(request, 'storyTellerApp/login.html')
