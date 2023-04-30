@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block css_files %}
-    <link rel="stylesheet" href="{% static 'storyTellerApp/addstory.css' %}">
+   <link rel="stylesheet" href="{% static 'storyTellerApp/addstory.css' %}">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
 {% endblock %} 
 
 {% block content %}
@@ -34,12 +38,11 @@
 
         <label for="media">Add Media:</label>
 		<input type="file" id="media" name="media"><br><br>
-		
 		<label for="location">Location:</label>
-		<input type="text" id="location" name="location">
+		<input type="text" id="location" name="location" value="" >
+        
         <div id="map"></div>
         <br><br>
-		
 		
         <fieldset>
 			<legend>Date:</legend>
@@ -102,6 +105,85 @@
 
 		<input type="submit" value="Submit">
 	</form>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 1);
+        L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=ObmhcyIVPHpLuSAuaCKz', {
+            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+        }).addTo(map);
+        L.Control.geocoder().addTo(map);
+        var drawnFeatures = new L.FeatureGroup();
+        map.addLayer(drawnFeatures);
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnFeatures,
+                remove: false
+            },
+            draw: {
+                polygon: {
+                    shapeOptions: {
+                        color: 'red'
+                    },
+
+                    drawError: {
+                        color: 'red',
+                        timeout: 1000
+                    },
+                },
+                polyline: {
+                    shapeOptions: {
+                        color: 'red'
+                    },
+                },
+                rectangle: {
+                    shapeOptions: {
+                        color: 'red'
+                    },
+                },
+                circle: {
+                    shapeOptions: {
+                        color: 'red'
+                    },
+                },
+            },
+        });
+        map.addControl(drawControl);
+
+        map.on("draw:created", function (e) {
+            var type = e.layerType;
+            var layer = e.layer;
+            console.log(e.layerType);
+
+            console.log(layer.toGeoJSON());
+            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON()) + '</p>');
+            drawnFeatures.addLayer(layer);
+        });
+
+        map.on("draw:edited", function (e) {
+            var layers = e.layers;
+            layers.eachLayer(function (layer) {
+                console.log(layer)
+                console.log(layer.toGeoJSON());
+            })
+
+        });
+
+        map.on("draw:deleted", function (e) {
+            var layers = e.layers;
+            layers.eachLayer(function (layer) {
+                console.log(layer)
+                console.log(layer.toGeoJSON());
+            })
+        });
+
+
+
+    </script>
 
 {% endblock %}
 
