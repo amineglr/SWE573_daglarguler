@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/addstory.css' %}">
+{% endblock %} 
+
+{% block content %}
+<header id="main-navigation">
+    <h1>StoryTeller</h1>
+    <nav><a href="{% url "home_page" %}"> Home</a></nav>
+    <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
+    <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
+    <nav><a href=""> Liked Stories</a></nav>
+    <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
+    <nav><a href=""> Search</a></nav>
+    <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout </a></nav>
+</header>
+<div id="upload-stories">
+    <h3>Upload a Story</h3>
+</div>
+	<form action="addstory" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+		<label for="title">Title:</label>
+		<input type="text" id="title" name="title"><br><br>
+		
+		<label for="tags">Tags:</label>
+		<input type="text" id="tags" name="tags"><br><br>
+
+        <label for="media">Add Media:</label>
+		<input type="file" id="media" name="media"><br><br>
+		
+		<label for="location">Location:</label>
+		<input type="text" id="location" name="location">
+        <div id="map"></div>
+        <br><br>
+		
+		
+        <fieldset>
+			<legend>Date:</legend>
+			<label for="session">Session:</label>
+			<select id="session" name="session">
+				<option value="">-- Select Session --</option>
+				<option value="fall">Fall</option>
+				<option value="winter">Winter</option>
+				<option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+			</select><br><br>
+
+            <label for="decade">Decade:</label>
+			<select id="decade" name="decade">
+				<option value="">-- Select Decade --</option>
+				<option value="2020's">2020's</option>
+				<option value="2010's">2010's</option>
+				<option value="2000's">2000's</option>
+                <option value="1990's">1990's</option>
+                <option value="1980's">1980's</option>
+                <option value="1970's">1970's</option>
+                <option value="1960's">1960's</option>
+                <option value="1950's">1950's</option>
+			</select><br><br>
+			
+			<label for="year">Year:</label>
+			<select id="year" name="year">
+				<option value="">-- Select Year --</option>
+				<option value="2023">2023</option>
+				<option value="2022">2022</option>
+				<option value="2021">2021</option>
+                <option value="2021">2020</option>
+                <option value="2021">2019</option>
+                <option value="2021">2018</option>
+			</select><br><br>
+			
+			<label for="month">Month:</label>
+			<select id="month" name="month">
+				<option value="">-- Select Month --</option>
+				<option value="1">January</option>
+				<option value="2">February</option>
+				<option value="3">March</option>
+				<option value="4">April</option>
+				<option value="5">May</option>
+				<option value="6">June</option>
+				<option value="7">July</option>
+				<option value="8">August</option>
+				<option value="9">September</option>
+				<option value="10">October</option>
+				<option value="11">November</option>
+				<option value="12">December</option>
+			</select><br><br>
+			
+			<label for="exact_date">Exact Date:</label>
+			<input type="date" id="exact_date" name="exact_date"><br><br>
+		</fieldset>
+		
+		<label for="content">Content:</label><br>
+		<textarea id="content" name="content" rows="50" cols="50"></textarea><br><br>
+
+		<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}
+
+
+  
+
+
+
+        

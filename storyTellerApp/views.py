@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from datetime import date
 from .models import Story
 from .models import Profile
+from .models import Location
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -22,10 +23,42 @@ def stories(request):
         "all_stories" : Story.objects.all().order_by("-created_at")
     })
 
+def mystories(request):
+    user_object= User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    return render( request, "storyTellerApp/mystories.html", {
+        "my_stories" : Story.objects.filter(user=user_profile.id_user)
+    })
 
 def view_story(request, id):
     identified_story = Story.objects.get(id=id)
     return render(request, "storyTellerApp/story.html", {"story": identified_story, "story_tags" : identified_story.tags.all()})
+
+
+def addstory(request):
+    if request.method== "POST":
+        user = request.user
+        image= request.FILES.get("media")
+        title = request.POST["content"]
+        content = request.POST["title"]
+        if request.POST["session"] !=None:
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+        elif request.POST["decade"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+        elif request.POST["year"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+        elif request.POST["month"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+        else:
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+        
+        new_story.save()
+        return redirect('/')
+
+    else:
+        return render(request, 'storyTellerApp/addstory.html')
+
+
 
 
 def editstories(request):

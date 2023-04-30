@@ -1,0 +1,138 @@
+body {
+    background-color: #e7e7e7;
+  }
+  #main-navigation {
+    width: 100%;
+    height: 10rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 10%;
+    position: absolute;
+    top: 0;
+  
+  }
+  
+  #main-navigation a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+  }
+  
+  #main-navigation a:hover,
+  #main-navigation a:active {
+    color: #4d6ff9;
+  }
+  
+  #main-navigation h1 {
+    text-decoration: none;
+    color: #0045e7;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  #main-navigation h1 a:hover,
+  #main-navigation h1 a:active {
+    color: rgb(255, 255, 255);
+  }
+
+form {
+    width: 80%;
+    max-width: 800px;
+    margin: 2rem auto 3rem auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    background-color: #6895fe;
+}
+
+#map {
+	height: 300px;
+	margin-bottom: 10px;
+    background-color: white;
+}
+
+#error-message {
+	color: red;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+#upload-stories {
+    margin-top: 10rem; 
+    margin-left: 10rem;
+  }
+  
+#upload-stories h3 {
+    text-align: left;
+    color: #0045e7;
+  
+  }
+  
+  /* Style for the form header */
+h1 {
+    text-align: center;
+    color: #333;
+}
+  
+  /* Style for the form labels */
+label {
+    display: inline-block;
+    width: 100px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+  
+  /* Style for the form input fields */
+input[type="text"], textarea, select ,input[type="date"]{
+    padding: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+  
+  /* Style for the file upload input field */
+input[type="file"] {
+    margin-top: 10px;
+}
+  
+  /* Style for the form submit button */
+input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+  
+  /* Hover style for the form submit button */
+input[type="submit"]:hover {
+    background-color: #555;
+}
+
+#session,
+#year,
+#decade,
+#month {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-right: 10px;
+	width: 150px;
+    margin-bottom: 20px;
+}
+
+#exact_date {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-right: 10px;
+	width: 300px;
+}

@@ -9,6 +9,8 @@ urlpatterns = [
     path("login", views.login, name="login"),
     path("signout", views.login, name="signout"),
     path("settings", views.settings, name="settings"),
+    path("addstory", views.addstory, name="addstory"),
+    path("mystories", views.mystories, name="mystories"),
 
 
 ]

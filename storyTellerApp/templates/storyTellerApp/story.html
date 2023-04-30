@@ -15,9 +15,9 @@
     <h1>StoryTeller</h1>
     <nav><a href="{% url "home_page" %}"> Home</a></nav>
     <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
-    <nav><a href=""> My Stories</a></nav>
+    <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
     <nav><a href=""> Liked Stories</a></nav>
-    <nav><a href=""> Add Stories</a></nav>
+    <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
     <nav><a href=""> Search</a></nav>
     <nav><a href="{% url "signout" %}"> Logout</a></nav>
 </header>
