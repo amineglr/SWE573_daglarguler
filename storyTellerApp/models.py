@@ -17,7 +17,7 @@ class Profile(models.Model):
     username = models.CharField(max_length=50, unique=True, default="")
     email = models.EmailField(unique=True, default="")
     password = models.CharField(max_length=128, default="")
-    profile_picture = models.ImageField(
+    profile_picture = models.FileField(
         upload_to='profile_picture', default="profile_picture/blank_profile_picture_PDkAhtk.jpg")
     bio = models.TextField(blank=True)
 
@@ -63,7 +63,7 @@ class Story(models.Model):
     decade= models.CharField(max_length=100)
     tags = models.ManyToManyField(Tag, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    image= models.ImageField(upload_to='story_images', blank=True)
+    image= models.FileField(upload_to='story_images', blank=True)
 
     def __str__(self):
         return self.title
@@ -85,7 +85,6 @@ class Like(models.Model):
     post_id = models.CharField(max_length=500)
     username = models.CharField(max_length=100)
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
-
     def __str__(self):
         return self.username
 
@@ -103,7 +102,6 @@ class Comment(models.Model):
 class Follower(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
-
     def __str__(self):
         return f"{self.follower.username} follows {self.user.username}"
 
