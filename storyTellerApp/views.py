@@ -88,3 +88,27 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('login')
+
+@login_required(login_url='login')    
+def settings(request):
+    user_profile = Profile.objects.get(user=request.user)
+
+    if request.method =='POST':
+        if request.FILES.get('profile_image') == None:
+            image= user_profile.profile_picture
+            bio= request.POST['bio']
+
+            user_profile.profile_picture = image
+            user_profile.bio = bio
+            user_profile.save()
+        if request.FILES.get('profile_image') !=None:
+            image= request.FILES.get('profile_image')
+            bio= request.POST.get('bio')
+
+            user_profile.profile_picture = image
+            user_profile.bio = bio
+            user_profile.save()
+        
+        return redirect('settings')
+    
+    return render(request, "storyTellerApp/profile_settings.html", {'user_profile': user_profile})

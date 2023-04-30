@@ -1,0 +1,87 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/profile_settings.css' %}">
+{% endblock %} 
+
+{% block content %}
+<header id="main-navigation">
+    <h1>StoryTeller</h1>
+    <nav><a href="{% url "home_page" %}"> Home</a></nav>
+    <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
+    <nav><a href=""> My Stories</a></nav>
+    <nav><a href=""> Liked Stories</a></nav>
+    <nav><a href=""> Add Stories</a></nav>
+    <nav><a href=""> Search</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout </a></nav>
+</header>
+<div id="settings-title">
+    <h3>Settings</h3>
+</div>
+<div id="settings">
+        <form action="" id="settings-form" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-25">
+                  <label for="username">Username</label>
+                </div>
+                <div class="col-75">
+                  <input type="text" id="username" name="username" value="{{ user_profile.username }}" placeholder={{ user.username }}>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-25">
+                <label for="firstname">First Name</label>
+              </div>
+                <div class="col-75">
+                <input type="text" id="firstname" name="firstname" value="{{ user_profile.first_name }}" placeholder="Your name..">
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-25">
+                <label for="lastname">Last Name</label>
+              </div>
+              <div class="col-75">
+                <input type="text" id="lastname" name="lastname" value="{{ user_profile.last_name }}" placeholder="Your last name..">
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="email">Email</label>
+                </div>
+                <div class="col-95">
+                  <input type="email" id="email" name="email" value="{{ user_profile.email }}" placeholder="Your email..">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-25">
+                  <label for="bio">Bio</label>
+                </div>
+                <div class="col-85">
+                  <textarea id="bio" name="bio" placeholder="bio.." style="height:200px" value="{{ user_profile.bio }}">{{ user_profile.bio }}</textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-25">
+                  <label for="profile_image">Profile Picture</label>
+                </div>
+                <div class="col-55">
+                    <img src="{{user_profile.profile_picture.url}}"/>
+                    <input type="file" id="profile_image"  name="profile_image" placeholder="profile image..">
+                </div>
+              </div>
+
+            <br>
+            <div class="row">
+              <input type="submit" value="Submit">
+            </div>
+        </form> 
+</div>
+
+{% endblock %}
