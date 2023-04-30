@@ -19,7 +19,8 @@
     <nav><a href=""> Liked Stories</a></nav>
     <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
     <nav><a href=""> Search</a></nav>
-    <nav><a href="{% url "signout" %}"> Logout</a></nav>
+    <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout </a></nav>
 </header>
     
     <section id="storyview">
@@ -31,7 +32,7 @@
                 Upload time <time>{{ story.created_at|date:"d M Y" }}</time>
             </div>
         </article>
-        <img src="" alt={{ story.title }}/>
+        <img src="{{ story.image.url }}" alt={{ story.title }}/>
         <div id="tag-area"> 
             {%for tag in story_tags %}
             <span class="tag">{{tag.name}} </span>

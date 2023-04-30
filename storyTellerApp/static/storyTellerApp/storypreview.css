@@ -56,8 +56,8 @@ ul {
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(1.5rem, 1fr));
-    gap: 25rem;
+    grid-template-columns: repeat(3, minmax(1rem, 1fr));
+    gap: 10rem;
     width: 90%;
     
   }

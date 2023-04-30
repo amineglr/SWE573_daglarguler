@@ -18,7 +18,7 @@ class Profile(models.Model):
     email = models.EmailField(unique=True, default="")
     password = models.CharField(max_length=128, default="")
     profile_picture = models.FileField(
-        upload_to='profile_picture', default="profile_picture/blank_profile_picture_PDkAhtk.jpg")
+        upload_to='profile_picture/', default="profile_picture/blank_profile_picture_PDkAhtk.jpg")
     bio = models.TextField(blank=True)
 
     def __str__(self):
@@ -63,7 +63,7 @@ class Story(models.Model):
     decade= models.CharField(max_length=100)
     tags = models.ManyToManyField(Tag, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    image= models.FileField(upload_to='story_images', blank=True)
+    image= models.FileField(upload_to='story_images/', blank=True)
 
     def __str__(self):
         return self.title
