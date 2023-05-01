@@ -10,6 +10,11 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from geopy.geocoders import Nominatim
+from django.contrib.gis.geos import Point, Polygon, LineString
+
+
+
 # Create your views here.
 
 @login_required(login_url='login')
@@ -41,16 +46,25 @@ def addstory(request):
         image= request.FILES.get("media")
         title = request.POST["content"]
         content = request.POST["title"]
+        location = request.POST["location"]
+        len = request.POST["len"]
+        lat = request.POST["lat"]
+        lats = float(lat)
+        lng = float(len)
+        geolocator = Nominatim(user_agent="my_app")  
+        location = geolocator.reverse(f"{lats}, {lng}")
+        adress = location.address
+        print("loc " + adress)
         if request.POST["session"] !=None:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
         elif request.POST["decade"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
         elif request.POST["year"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
         elif request.POST["month"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
         else:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name='east-turkey'))
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
         
         new_story.save()
         return redirect('/')

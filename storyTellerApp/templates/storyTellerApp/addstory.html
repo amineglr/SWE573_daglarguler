@@ -39,7 +39,11 @@
         <label for="media">Add Media:</label>
 		<input type="file" id="media" name="media"><br><br>
 		<label for="location">Location:</label>
-		<input type="text" id="location" name="location" value="" >
+		<input type="text" id="location" name="location" value="">
+        <label for="len">len:</label>
+		<input type="text" id="len" name="len" value="">
+        <label for="lat">lat:</label>
+		<input type="text" id="lat" name="lat" value="">
         
         <div id="map"></div>
         <br><br>
@@ -115,6 +119,7 @@
         L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=ObmhcyIVPHpLuSAuaCKz', {
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         }).addTo(map);
+
         L.Control.geocoder().addTo(map);
         var drawnFeatures = new L.FeatureGroup();
         map.addLayer(drawnFeatures);
@@ -158,9 +163,17 @@
             var type = e.layerType;
             var layer = e.layer;
             console.log(e.layerType);
-
+            var len=layer.toGeoJSON().geometry.coordinates[0];
+            var lat = layer.toGeoJSON().geometry.coordinates[1];
+            var lenglat = layer.toGeoJSON().geometry.coordinates;
+            console.log(layer.toGeoJSON().geometry.coordinates[0]);
+            console.log(layer.toGeoJSON().geometry.coordinates[1]);
             console.log(layer.toGeoJSON());
-            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON()) + '</p>');
+            document.getElementById("location").value = lenglat;
+            document.getElementById("lat").value = lat;
+            document.getElementById("len").value = len;
+             
+            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON().geometry.coordinates) + '</p>');
             drawnFeatures.addLayer(layer);
         });
 
