@@ -12,8 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from geopy.geocoders import Nominatim
 from django.contrib.gis.geos import Point, Polygon, LineString
-
-
+import json
 
 # Create your views here.
 
@@ -37,36 +36,94 @@ def mystories(request):
 
 def view_story(request, id):
     identified_story = Story.objects.get(id=id)
-    return render(request, "storyTellerApp/story.html", {"story": identified_story, "story_tags" : identified_story.tags.all()})
+    return render(request, "storyTellerApp/story.html", {"story": identified_story, "story_tags" : identified_story.tags.all(), "story_locations": identified_story.locations.all()})
 
 
 def addstory(request):
     if request.method== "POST":
         user = request.user
         image= request.FILES.get("media")
-        title = request.POST["content"]
-        content = request.POST["title"]
-        location = request.POST["location"]
-        len = request.POST["len"]
-        lat = request.POST["lat"]
-        lats = float(lat)
-        lng = float(len)
+        title = request.POST["title"]
+        content = request.POST["content"]
+        search_location = request.POST["coordinatessearch"]
+        search_address = request.POST["address"]
         geolocator = Nominatim(user_agent="my_app")  
-        location = geolocator.reverse(f"{lats}, {lng}")
-        adress = location.address
-        print("loc " + adress)
-        if request.POST["session"] !=None:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
-        elif request.POST["decade"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
-        elif request.POST["year"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
-        elif request.POST["month"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
+        loc_data_str = request.POST.get("locations", '[]')
+        if loc_data_str:
+            loc_data = json.loads(loc_data_str)
         else:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title, location=Location(id='aaa16712-f6e0-4af6-88b8-228a763a90ad', name=adress))
+            loc_data = []
+
+        print(loc_data)
+        locations = []
+        if loc_data != []:
+            for loc in loc_data:
+                if loc.get('geometry'):
+                    location_type = loc['geometry']['type']
+                    coordinates = loc['geometry']['coordinates']
+
+                    if location_type == 'Point':
+                        point = Point(coordinates)
+                        results = geolocator.reverse(f"{point.y}, {point.x}")
+                        location_name = results.address
+                        location_name = location_name.replace("unnamed road,", "")
+                        print(location_name)
+                        location = Location(name=location_name, point=point)
+
+                    elif location_type == 'Polygon':
+                        polygon = Polygon(coordinates[0])
+                        centroid = polygon.centroid
+                        results = geolocator.reverse(f"{centroid.y}, {centroid.x}" )
+                        location_name = results.address
+                        location_name = location_name.replace("unnamed road,", "")
+                        print(location_name)
+                        location = Location(
+                            name=location_name, area=polygon)
+
+                    elif location_type == 'LineString':
+                        linestring = LineString(coordinates)
+                        midpoint = linestring.interpolate(linestring.length/2)
+                        results = geolocator.reverse(f"{midpoint.y}, {midpoint.x}")
+                        location_name = results.address
+                        location_name = location_name.replace("unnamed road,", "")
+                        print(location_name)
+                        location = Location(
+                            name=location_name, lines=linestring)
+
+                    if location:
+                        radius = loc.get('properties', {}).get('radius')
+                        if radius:
+                            location.radius = float(radius)
+
+                    locations.append(location)
+        else:
+            x, y= search_location.split(", ")
+            search_point = Point(float(x), float(y))
+            search_name = search_address
+            location_search = Location(name=search_name, point=search_point)
+            locations.append(location_search)
+            
+            
+
+        print(locations)
+
+        for location in locations:
+            location.save()
+        
+        if request.POST["session"] !=None:
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title)
+        elif request.POST["decade"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title)
+        elif request.POST["year"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title)
+        elif request.POST["month"] !=None :
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title)
+        else:
+            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title)
         
         new_story.save()
+        new_story.locations.set(locations)
+       
         return redirect('/')
 
     else:

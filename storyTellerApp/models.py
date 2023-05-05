@@ -36,7 +36,9 @@ class Location(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
     point = models.PointField(blank=True, null=True)
-    area = models.MultiPolygonField(blank=True, null=True)
+    area = models.PolygonField(blank=True, null=True)
+    lines= models.LineStringField(blank=True, null=True)
+    radius = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name 
@@ -62,7 +64,7 @@ class Story(models.Model):
     date_range_end= models.DateField(null=True, blank=True)
     decade= models.CharField(max_length=100)
     tags = models.ManyToManyField(Tag, blank=True)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    locations =  models.ManyToManyField(Location)
     image= models.FileField(upload_to='story_images/', blank=True)
 
     def __str__(self):
@@ -78,7 +80,7 @@ class Story(models.Model):
         return self.tags.all()
 
     def get_location(self):
-        return self.location
+        return self.locations.all()
 
 
 class Like(models.Model):

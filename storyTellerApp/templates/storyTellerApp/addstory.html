@@ -38,12 +38,19 @@
 
         <label for="media">Add Media:</label>
 		<input type="file" id="media" name="media"><br><br>
-		<label for="location">Location:</label>
-		<input type="text" id="location" name="location" value="">
-        <label for="len">len:</label>
-		<input type="text" id="len" name="len" value="">
-        <label for="lat">lat:</label>
-		<input type="text" id="lat" name="lat" value="">
+
+        <input type="hidden" name="type" id="type"> 
+        <label for="radius">radius:</label>
+        <input type="text" name="radius" id="radius">
+        <label for="coordinates">coordinates:</label>
+        <input type="text" name="coordinates" id="coordinates">
+
+        <label for="address">address:</label>
+        <input type="text" name="address" id="address">
+        
+        <input type="hidden" name="coordinatessearch" id="coordinatessearch">
+        
+        <input type="hidden" name="locations" id="locations">
         
         <div id="map"></div>
         <br><br>
@@ -114,15 +121,32 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         var map = L.map('map').setView([0, 0], 1);
         L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=ObmhcyIVPHpLuSAuaCKz', {
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         }).addTo(map);
 
-        L.Control.geocoder().addTo(map);
+        var geocoder = L.Control.geocoder().on('markgeocode', function(event) {
+            var center = event.geocode.center;
+            L.marker(center).addTo(map);
+            map.setView(center, map.getZoom());
+            var result = event.geocode;
+            var latlng = result.center;
+            var latlng = result.center.toString().replace(/^latlng\(/i, '').replace(/\)$/, '');
+            var address = result.name + ', ' + result.properties.address.city;
+            document.getElementById("address").value = address;
+            document.getElementById("coordinates").value = latlng;
+            document.getElementById("coordinatessearch").value = latlng;
+        }).addTo(map);
+       
+
         var drawnFeatures = new L.FeatureGroup();
         map.addLayer(drawnFeatures);
+        
+        var locationData = [];
 
         var drawControl = new L.Control.Draw({
             edit: {
@@ -132,7 +156,7 @@
             draw: {
                 polygon: {
                     shapeOptions: {
-                        color: 'red'
+                        color: 'blue'
                     },
 
                     drawError: {
@@ -142,12 +166,12 @@
                 },
                 polyline: {
                     shapeOptions: {
-                        color: 'red'
+                        color: 'green'
                     },
                 },
                 rectangle: {
                     shapeOptions: {
-                        color: 'red'
+                        color: 'orange'
                     },
                 },
                 circle: {
@@ -162,20 +186,61 @@
         map.on("draw:created", function (e) {
             var type = e.layerType;
             var layer = e.layer;
-            console.log(e.layerType);
-            var len=layer.toGeoJSON().geometry.coordinates[0];
-            var lat = layer.toGeoJSON().geometry.coordinates[1];
-            var lenglat = layer.toGeoJSON().geometry.coordinates;
-            console.log(layer.toGeoJSON().geometry.coordinates[0]);
-            console.log(layer.toGeoJSON().geometry.coordinates[1]);
-            console.log(layer.toGeoJSON());
-            document.getElementById("location").value = lenglat;
-            document.getElementById("lat").value = lat;
-            document.getElementById("len").value = len;
-             
-            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON().geometry.coordinates) + '</p>');
             drawnFeatures.addLayer(layer);
+
+            if (type == 'circle') {
+                var radius = layer.getRadius();
+                console.log(radius);
+                document.getElementById("radius").value = radius;
+            }
+           
+            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON().geometry.coordinates) + '</p>');
+            
+            var coordinates = JSON.stringify(layer.toGeoJSON().geometry.coordinates);
+            var locationType = JSON.stringify(layer.toGeoJSON().geometry.type);
+            
+            document.getElementById("coordinates").value = coordinates;
+            document.getElementById("type").value = locationType.replace(/'/g, '');
+
+            var location = layer.toGeoJSON();
+            locationData.push(location);
+            var locationDataStr = JSON.stringify(locationData);
+
+            document.getElementById("locations").value = locationDataStr;
+
+            if(layer.toGeoJSON().geometry.type == "Polygon"){
+                var len=layer.toGeoJSON().geometry.coordinates[0][0][0];
+                var lats = layer.toGeoJSON().geometry.coordinates[0][0][1];
+                console.log(len);
+                console.log(lats);
+                ReverseGeocoding(len, lats);
+            }
+            if(layer.toGeoJSON().geometry.type == "LineString"){
+                var len = layer.toGeoJSON().geometry.coordinates[0][0];
+                var lats = layer.toGeoJSON().geometry.coordinates[0][1];
+                console.log(len);
+                console.log(lats);
+    
+                ReverseGeocoding(len, lats);
+            }
+            if(layer.toGeoJSON().geometry.type == "Point"){
+                var len=layer.toGeoJSON().geometry.coordinates[0];
+                var lats = layer.toGeoJSON().geometry.coordinates[1];
+                console.log(len);
+                console.log(lats);
+                ReverseGeocoding(len, lats);
+            }
+        
+
         });
+
+        function ReverseGeocoding(lon, lat) {
+            fetch('http://nominatim.openstreetmap.org/reverse?format=json&lon=' + lon + '&lat=' + lat).then(function(response) {
+              return response.json();
+            }).then(function(json) {
+              document.getElementById('address').value = json.display_name;
+            })
+          }
 
         map.on("draw:edited", function (e) {
             var layers = e.layers;
@@ -185,7 +250,7 @@
             })
 
         });
-
+    
         map.on("draw:deleted", function (e) {
             var layers = e.layers;
             layers.eachLayer(function (layer) {

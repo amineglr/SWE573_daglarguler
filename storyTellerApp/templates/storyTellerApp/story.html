@@ -31,6 +31,11 @@
             <div>
                 Upload time <time>{{ story.created_at|date:"d M Y" }}</time>
             </div>
+            <div>
+                {%for locations in story_locations %}
+                <span class="locations">{{locations.name}} </span>
+                {% endfor %}
+            </div>
         </article>
         <img src="{{ story.image.url }}" alt={{ story.title }}/>
         <div id="tag-area"> 
