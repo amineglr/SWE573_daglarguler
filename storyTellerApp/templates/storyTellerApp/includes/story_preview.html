@@ -3,10 +3,35 @@
 <li>
     <div id="post">
         <a href="{% url "view_story" story.id %}">
-            <h3>{{ story.title }}</h3>
             <p>
-                {{ story.content|safe}}
+                {{ story.user }}
             </p>
+            <h3>{{ story.title }}</h3>
+           
+          
+            {% if story.date_exact %}
+            <p>Date: {{ story.date_exact }}</p>
+            {% endif %}
+            {% if story.session %}
+            <p>Session: {{ story.session }}</p>
+            {% endif %}
+            {% if story.month %}
+            <p>Month: {{ story.month }}</p>
+            {% endif %}
+            {% if story.year %}
+            <p>Year: {{ story.year }}</p>
+            {% endif %}
+            {% if story.date_range_start %}
+            <p>Date Range: {{ story.date_range_start }} - {{ story.date_range_end }} </p>
+            {% endif %}
+            {% if story.decade %}
+            <p>Decade: {{ story.decade }}</p>
+            {% endif %}
+           {% comment %}  <p>{% for location in story.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> {% endcomment %}
+           <p>{% for tags in story.tags.all %}{{ tags.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> 
+           <p>
+            {{ story.raw_text }}
+        </p>
         </a>
     </div> 
 </li>

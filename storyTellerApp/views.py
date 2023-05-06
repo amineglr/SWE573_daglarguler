@@ -6,6 +6,7 @@ from datetime import date
 from .models import Story
 from .models import Profile
 from .models import Location
+from .models import Tag
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -14,12 +15,20 @@ from geopy.geocoders import Nominatim
 from django.contrib.gis.geos import Point, Polygon, LineString
 import json
 from .forms import StoryForm
-
+from django.utils.html import strip_tags
+import bleach
 # Create your views here.
 
 @login_required(login_url='login')
 def home_page(request):
     latest_stories = Story.objects.all().order_by("-created_at")[:10]
+    for story in latest_stories:
+        cleaned_text = bleach.clean(story.content, tags=[], strip=True)
+        text_without_images = bleach.clean(cleaned_text, tags=['p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'br'], strip=True)
+        story.raw_text = strip_tags(text_without_images)
+        if len(story.raw_text) > 100:
+            story.raw_text = story.raw_text[:100] + '...'
+        
     return render(request, "storyTellerApp/home.html",{ "stories" : latest_stories} )
 
 
@@ -32,7 +41,7 @@ def mystories(request):
     user_object= User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
     return render( request, "storyTellerApp/mystories.html", {
-        "my_stories" : Story.objects.filter(user=user_profile.id_user)
+        "my_stories" : Story.objects.filter(user=user_profile.id_user).order_by("-created_at")
     })
 
 def view_story(request, id):
@@ -42,16 +51,97 @@ def view_story(request, id):
 
 def addstory(request):
     form = StoryForm()
+    DATE_FORMAT_CHOICES = (
+        (1, 'Exact Date'),
+        (2, 'Session'),
+        (3, 'Decade'),
+        (4, 'Year'),
+        (5, 'Month'),
+        (6, 'Date Range'),
+    )
+    SESSION_CHOICES = (
+        (1, 'fall'),
+        (2, 'winter'),
+        (3, 'spring'),
+        (4, 'summer'),
+    )
+    DECADE_CHOICES = (
+        (1, "2020's"),
+        (2, "2010's"),
+        (3, "2000's"),
+        (4, "1990's"),
+        (5, "1980's"),
+        (6, "1970's"),
+        (7, "1960's"),
+        (8, "1950's"),
+    )
+    MONTH_CHOICES = (
+        (1, "January"),
+        (2, "February"),
+        (3, "March"),
+        (4, "April"),
+        (5, "May"),
+        (6, "June"),
+        (7, "August"),
+        (8, "September"),
+        (9, "October"),
+        (10, "November"),
+        (11, "December"),
+    )
 
     if request.method == 'POST':
+        print(request.POST)
         form = StoryForm(request.POST)
         user = request.user
         title = request.POST["title"]
         content = request.POST["content"]
+        #tag 
+        tag = request.POST["tags"]
+        tag_list = [t.strip() for t in tag.split(",")]
+        tagList = []
+        for tags in tag_list:
+            tags = Tag(name= tags)
+            tagList.append(tags)
+            
+        # location
         search_location = request.POST["coordinatessearch"]
         search_address = request.POST["address"]
         geolocator = Nominatim(user_agent="my_app")  
         loc_data_str = request.POST.get("locations", '[]')
+        # date
+        date_format = request.POST["date-format"]
+        if 'exact_date' in request.POST:
+            exact_date = request.POST['exact_date']
+        else:
+            exact_date = None
+        if 'session' in request.POST:
+            session = request.POST['session']
+           
+        else:
+            session = None
+        if 'decade' in request.POST:
+            decade = request.POST['decade']
+           
+        else:
+            decade = None
+        if 'year' in request.POST:
+            year = request.POST['year']
+        else:
+            year = None
+        if 'month' in request.POST:
+            month = request.POST['month']
+           
+        else:
+            month = None
+        if 'date-range-start' in request.POST:
+            date_range_start = request.POST['date-range-start']
+        else:
+            date_range_start = None
+        if 'date-range-end' in request.POST:
+            date_range_end = request.POST['date-range-end']
+        else:
+            date_range_end = None
+
         if loc_data_str:
             loc_data = json.loads(loc_data_str)
         else:
@@ -106,31 +196,37 @@ def addstory(request):
             location_search = Location(name=search_name, point=search_point)
             locations.append(location_search)
             
-            
-
         print(locations)
 
         for location in locations:
             location.save()
         
-        if request.POST["session"] !=None:
-            new_story= Story.objects.create(user=user, content= content, date_format='2', title=title)
-        elif request.POST["decade"] !=None :
-            new_story= Story.objects.create(user=user, content= content, date_format='3', title=title)
-        elif request.POST["year"] !=None :
-            new_story= Story.objects.create(user=user,content= content,  date_format='4', title=title)
-        elif request.POST["month"] !=None :
-            new_story= Story.objects.create(user=user, content= content, date_format='5', title=title)
-        else:
-            new_story= Story.objects.create(user=user,content= content, date_format='1',title=title)
-        
+        for tags in tagList:
+            tags.save()
+
+      
+        new_story= Story.objects.create(
+            user=user,
+            content= content, 
+            date_format=date_format,
+            session = session,
+            month = month,
+            year = year,
+            date_exact= exact_date,
+            date_range_start = date_range_start,
+            date_range_end = date_range_end,
+            decade = decade,
+            title=title,
+            )
         new_story.save()
         new_story.locations.set(locations)
+        new_story.tags.set(tagList)
+        
        
         return redirect('/')
 
     else:
-        context = {'form': form}
+        context = {'form': form, 'DATE_FORMAT_CHOICES': DATE_FORMAT_CHOICES, 'SESSION_CHOICES': SESSION_CHOICES, 'DECADE_CHOICES':DECADE_CHOICES, 'MONTH_CHOICES': MONTH_CHOICES}
         return render(request, 'storyTellerApp/addstory.html', context)
 
 
@@ -139,9 +235,6 @@ def addstory(request):
 def editstories(request):
     return HttpResponse("Edit Stories")
 
-
-def location(request):
-    return HttpResponse("Location")
 
 def signup(request):
 

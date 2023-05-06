@@ -52,64 +52,64 @@
         
         <div id="map"></div>
         <br><br>
-		
-        <fieldset>
-			<legend>Date:</legend>
-			<label for="session">Session:</label>
-			<select id="session" name="session">
-				<option value="">-- Select Session --</option>
-				<option value="fall">Fall</option>
-				<option value="winter">Winter</option>
-				<option value="spring">Spring</option>
-                <option value="summer">Summer</option>
-			</select><br><br>
+		<label for="date-format">Date Format:</label>
+        <select id="date-format" name="date-format">
+            {% for choice in DATE_FORMAT_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
 
+        
+
+        <fieldset id="fieldset-1">
+            <label for="exact_date">Exact Date:</label>
+            <input type="date" id="exact_date" name="exact_date"><br><br>
+        </fieldset>
+
+        <fieldset id="fieldset-2">
+            <label for="session">Session:</label>
+            <select id="session" name="session">
+                {% for session in SESSION_CHOICES %}
+                <option value="{{ session.1 }}">{{ session.1 }}</option>
+                {% endfor %}
+            </select><br><br>
+        </fieldset>
+
+        <fieldset id="fieldset-3">
             <label for="decade">Decade:</label>
-			<select id="decade" name="decade">
-				<option value="">-- Select Decade --</option>
-				<option value="2020's">2020's</option>
-				<option value="2010's">2010's</option>
-				<option value="2000's">2000's</option>
-                <option value="1990's">1990's</option>
-                <option value="1980's">1980's</option>
-                <option value="1970's">1970's</option>
-                <option value="1960's">1960's</option>
-                <option value="1950's">1950's</option>
+            <select id="decade" name="decade">
+                {% for decade in DECADE_CHOICES %}
+                <option value="{{ decade.1}}">{{ decade.1 }}</option>
+                {% endfor %}
+            </select><br><br>
+        </fieldset>
+
+        <fieldset id="fieldset-4">
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year">
+                
+            <br><br>
+        </fieldset>
+        <fieldset id="fieldset-5">
+            <label for="month">Month:</label>
+            <select id="month" name="month">
+				{% for month in MONTH_CHOICES %}
+                <option value="{{ month.1 }}">{{ month.1 }}</option>
+                {% endfor %}
 			</select><br><br>
-			
-			<label for="year">Year:</label>
-			<select id="year" name="year">
-				<option value="">-- Select Year --</option>
-				<option value="2023">2023</option>
-				<option value="2022">2022</option>
-				<option value="2021">2021</option>
-                <option value="2021">2020</option>
-                <option value="2021">2019</option>
-                <option value="2021">2018</option>
-			</select><br><br>
-			
-			<label for="month">Month:</label>
-			<select id="month" name="month">
-				<option value="">-- Select Month --</option>
-				<option value="1">January</option>
-				<option value="2">February</option>
-				<option value="3">March</option>
-				<option value="4">April</option>
-				<option value="5">May</option>
-				<option value="6">June</option>
-				<option value="7">July</option>
-				<option value="8">August</option>
-				<option value="9">September</option>
-				<option value="10">October</option>
-				<option value="11">November</option>
-				<option value="12">December</option>
-			</select><br><br>
-			
-			<label for="exact_date">Exact Date:</label>
-			<input type="date" id="exact_date" name="exact_date"><br><br>
-		</fieldset>
-		
-	
+        </fieldset>
+        <fieldset id="fieldset-6">
+            <legend>Date Range</legend>
+            <label for="date-range-start">Start Date:</label>
+            <input type="text" id="date-range-start" name="date-range-start">
+        
+            <br><br>
+        
+            <label for="date-range-end">End Date:</label>
+            <input type="text" id="date-range-end" name="date-range-end">
+        
+            <br><br>
+        </fieldset>
         <div class="form-group">
             {{ form.as_p}}
             {{ form.media }}
@@ -118,6 +118,130 @@
 
 		<input type="submit" value="Submit">
 	</form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            const dateFormatSelect = document.getElementById("date-format");
+            const exactDateField = document.getElementById("exact_date");
+            const sessionField = document.getElementById("session");
+            const decadeField = document.getElementById("decade");
+            const yearField = document.getElementById("year");
+            const monthField = document.getElementById("month");
+            const dateRangeStart = document.getElementById("date-range-start");
+            const dateRangeEnd = document.getElementById("date-range-end");
+            function toggleDateFields() {
+            if (dateFormatSelect.value == 1) { // exact date format
+                exactDateField.required = true;
+                exactDateField.disabled = false;
+                sessionField.required = false;
+                sessionField.disabled = true;
+                decadeField.required = false;
+                decadeField.disabled = true;
+                yearField.required = false;
+                yearField.disabled = true;
+                monthField.required = false;
+                monthField.disabled = true;
+                dateRangeStart.required =false;
+                dateRangeStart.disabled = true;
+                dateRangeEnd.required =false;
+                dateRangeEnd.disabled = true;
+            } else { // other date formats
+                exactDateField.required = false;
+                exactDateField.disabled = true;
+                sessionField.required = false;
+                sessionField.disabled = true;
+                decadeField.required = false;
+                decadeField.disabled = true;
+                yearField.required = false;
+                yearField.disabled = true;
+                monthField.required = false;
+                monthField.disabled = true;
+                dateRangeStart.required =false;
+                dateRangeStart.disabled = true;
+                dateRangeEnd.required =false;
+                dateRangeEnd.disabled = true;
+                switch(dateFormatSelect.value) {
+                case "2": // session
+                    sessionField.required = true;
+                    sessionField.disabled = false;
+                    {% comment %} decadeField.required = false;
+                    decadeField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "3": // decade
+                    
+                    decadeField.required = true;
+                    decadeField.disabled = false;
+                 {% comment %}    sessionField.required = false;
+                    sessionField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "4": // year
+                    yearField.required = true;
+                    yearField.disabled = false;
+                    {% comment %} sessionField.required = false;
+                    sessionField.disabled = false;
+                    decadeField.required = false;
+                    decadeField.disabled = false;
+                    
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "5": // month
+                    monthField.required = true;
+                    monthField.disabled = false;
+                    {% comment %} sessionField.required = false;
+                    sessionField.disabled = false;
+                    decadeField.required = false;
+                    decadeField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                   
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "6": // daterange
+                  {% comment %}   sessionField.required = false;
+                    sessionField.disabled = true;
+                    decadeField.required = false;
+                    decadeField.disabled = true;
+                    yearField.required = false;
+                    yearField.disabled = true;
+                    monthField.required = false;
+                    monthField.disabled = true; {% endcomment %}
+                    dateRangeStart.required =true;
+                    dateRangeStart.disabled = false;
+                    dateRangeEnd.required =true;
+                    dateRangeEnd.disabled = false;
+                    break;
+                }
+            }
+            }
+
+            dateFormatSelect.addEventListener("change", toggleDateFields);
+            toggleDateFields(); // set initial state based on the default selected value
+
+        </script>
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>

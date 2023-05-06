@@ -48,13 +48,20 @@ body {
 #storyview h2 {
     color: #0045e7;
     font-size: 2rem;
-  }
+}
   
 #storyview article {
     border-radius: 12px;
     text-align: right;
     color: #0045e7;
-  }
+}
+
+#date-type {
+  border-radius: 12px;
+  text-align: left;
+  color: #0045e7;
+
+}
   
 #storyview article img {
     width: 12rem;

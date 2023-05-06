@@ -27,16 +27,36 @@
         <h2> {{ story.title }} </h2>
         <article>
              
-            <a href=""><adress>{{ story.user }} </adress></a>
-            <div>
-                Upload time <time>{{ story.created_at|date:"d M Y" }}</time>
-            </div>
+            <a href=""><adress>{{ story.user }}</adress></a>
             <div>
                 {%for locations in story_locations %}
                 <span class="locations">{{locations.name}} </span>
                 {% endfor %}
             </div>
+            <div>
+                {% if story.date_exact %}
+                <p>Date: {{ story.date_exact }}</p>
+                {% endif %}
+                {% if story.session %}
+                <p>Session: {{ story.session }}</p>
+                {% endif %}
+                {% if story.month %}
+                <p>Month: {{ story.month }}</p>
+                {% endif %}
+                {% if story.year %}
+                <p>Year: {{ story.year }}</p>
+                {% endif %}
+                {% if story.date_range_start %}
+                <p>Date Range: {{ story.date_range_start }} - {{ story.date_range_end }}</p>
+                {% endif %}
+                {% if story.decade %}
+                <p>Decade: {{story.decade}}</p>
+                {% endif %}
+            </div>
         </article>
+        <div id="date-type">
+            
+        </div>
         <div id="tag-area"> 
             {%for tag in story_tags %}
             <span class="tag">{{tag.name}} </span>

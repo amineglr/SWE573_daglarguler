@@ -53,6 +53,36 @@ class Story(models.Model):
         (3, 'Decade'),
         (4, 'Year'),
         (5, 'Month'),
+        (6, 'Date Range'),
+    )
+    SESSION_CHOICES = (
+        (1, 'fall'),
+        (2, 'winter'),
+        (3, 'spring'),
+        (4, 'summer'),
+    )
+    DECADE_CHOICES = (
+        (1, "2020's"),
+        (2, "2010's"),
+        (3, "2000's"),
+        (4, "1990's"),
+        (5, "1980's"),
+        (6, "1970's"),
+        (7, "1960's"),
+        (8, "1950's"),
+    )
+    MONTH_CHOICES = (
+        (1, "January"),
+        (2, "February"),
+        (3, "March"),
+        (4, "April"),
+        (5, "May"),
+        (6, "June"),
+        (7, "August"),
+        (8, "September"),
+        (9, "October"),
+        (10, "November"),
+        (11, "December"),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
@@ -61,10 +91,13 @@ class Story(models.Model):
     content = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
     date_format= models.IntegerField(choices=DATE_FORMAT_CHOICES)
+    session = models.CharField(choices=SESSION_CHOICES, null=True, blank=True,max_length=20)
+    month = models.CharField(choices=MONTH_CHOICES, null=True, blank=True,max_length=20 )
+    year = models.CharField(max_length=100, null=True, blank=True)
     date_exact = models.DateField(null=True, blank=True)
-    date_range_start= models.DateField(null=True, blank=True)
-    date_range_end= models.DateField(null=True, blank=True)
-    decade= models.CharField(max_length=100)
+    date_range_start= models.CharField(max_length=100, null=True, blank=True)
+    date_range_end= models.CharField(max_length=100, null=True, blank=True)
+    decade= models.CharField(choices=DECADE_CHOICES, null=True, blank=True, max_length=20)
     tags = models.ManyToManyField(Tag, blank=True)
     locations =  models.ManyToManyField(Location)
 
