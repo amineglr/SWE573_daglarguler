@@ -3,10 +3,9 @@
 <li>
     <div id="post">
         <a href="{% url "view_story" story.id %}">
-            <img src="{{ story.image.url }}" alt={{ story.title }}/>
             <h3>{{ story.title }}</h3>
             <p>
-                {{ story.content|slice:"0:100"|add:"..."}}
+                {{ story.content|safe}}
             </p>
         </a>
     </div> 

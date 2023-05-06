@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from geopy.geocoders import Nominatim
 from django.contrib.gis.geos import Point, Polygon, LineString
 import json
+from .forms import StoryForm
 
 # Create your views here.
 
@@ -40,9 +41,11 @@ def view_story(request, id):
 
 
 def addstory(request):
-    if request.method== "POST":
+    form = StoryForm()
+
+    if request.method == 'POST':
+        form = StoryForm(request.POST)
         user = request.user
-        image= request.FILES.get("media")
         title = request.POST["title"]
         content = request.POST["content"]
         search_location = request.POST["coordinatessearch"]
@@ -111,15 +114,15 @@ def addstory(request):
             location.save()
         
         if request.POST["session"] !=None:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='2', title=title)
+            new_story= Story.objects.create(user=user, content= content, date_format='2', title=title)
         elif request.POST["decade"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='3', title=title)
+            new_story= Story.objects.create(user=user, content= content, date_format='3', title=title)
         elif request.POST["year"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='4', title=title)
+            new_story= Story.objects.create(user=user,content= content,  date_format='4', title=title)
         elif request.POST["month"] !=None :
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='5', title=title)
+            new_story= Story.objects.create(user=user, content= content, date_format='5', title=title)
         else:
-            new_story= Story.objects.create(user=user, image=image, content=content, date_format='1',title=title)
+            new_story= Story.objects.create(user=user,content= content, date_format='1',title=title)
         
         new_story.save()
         new_story.locations.set(locations)
@@ -127,7 +130,8 @@ def addstory(request):
         return redirect('/')
 
     else:
-        return render(request, 'storyTellerApp/addstory.html')
+        context = {'form': form}
+        return render(request, 'storyTellerApp/addstory.html', context)
 
 
 

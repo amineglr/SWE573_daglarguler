@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.db import models
 import uuid
 from datetime import datetime
+from ckeditor.fields import RichTextField
+
 
 # Create your models here.
 
@@ -56,7 +58,7 @@ class Story(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    content = models.TextField()
+    content = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
     date_format= models.IntegerField(choices=DATE_FORMAT_CHOICES)
     date_exact = models.DateField(null=True, blank=True)
@@ -65,7 +67,6 @@ class Story(models.Model):
     decade= models.CharField(max_length=100)
     tags = models.ManyToManyField(Tag, blank=True)
     locations =  models.ManyToManyField(Location)
-    image= models.FileField(upload_to='story_images/', blank=True)
 
     def __str__(self):
         return self.title
