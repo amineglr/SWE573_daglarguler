@@ -10,6 +10,7 @@ urlpatterns = [
     path("signout", views.logout, name="signout"),
     path("settings", views.settings, name="settings"),
     path("addstory", views.addstory, name="addstory"),
+    path("editstory<slug:id>", views.editstories, name="editstory"),
     path("mystories", views.mystories, name="mystories"),
     path("search", views.search, name="search"),
 ]

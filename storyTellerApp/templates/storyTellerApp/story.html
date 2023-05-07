@@ -32,6 +32,7 @@
     
     <section id="storyview">
         <h2> {{ story.title }} </h2>
+        <a href={% url "editstory" story.id %}> Edit Story </a>
         <article>
              
             <a href=""><adress>{{ story.user }}</adress></a>

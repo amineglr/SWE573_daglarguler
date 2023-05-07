@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+   <link rel="stylesheet" href="{% static 'storyTellerApp/addstory.css' %}">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+{% endblock %} 
+
+{% block content %}
+<header id="main-navigation">
+    <h1>StoryTeller</h1>
+    <nav><a href="{% url "home_page" %}"> Home</a></nav>
+    <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
+    <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
+    <nav><a href=""> Liked Stories</a></nav>
+    <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
+    <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout </a></nav>
+    <form action ="/search" method="POST" id="search-form">
+        {% csrf_token %}
+        <div class="left-side">
+                <input type="text" name="search" placeholder="Search..">
+                <button type="submit"><i class="material-icons">search</i></button>
+        </div>
+    </form>
+</header>
+<div id="upload-stories">
+    <h3>Edit the Story</h3>
+</div>
+	<form action="editstory" method="POST" enctype="multipart/form-data" id="editstroyform">
+        {% csrf_token %}
+		<label for="title">Title:</label>
+		<input type="text" id="title" name="title" value="{{ story.title }}"><br><br>
+		
+		<label for="tags">Tags:</label>
+        
+        <input type="text" id="tags" name="tags" value="{% for tags in story.tags.all %}{{ tags.name }}{% if not forloop.last %}, {% endif %}{% endfor %}" ><br><br>
+
+        <input type="hidden" name="type" id="type"> 
+        <label for="radius">radius:</label>
+        <input type="text" name="radius" id="radius">
+        <label for="coordinates">coordinates:</label>
+        <input type="text" name="coordinates" id="coordinates">
+
+        <label for="address">address:</label>
+        <input type="text" name="address" id="address" value = "{% for location in story.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+        
+        <input type="hidden" name="coordinatessearch" id="coordinatessearch">
+        
+        <input type="hidden" name="locations" id="locations">
+        
+        <div id="map"></div>
+        <br><br>
+		<label for="date-format">Date Format:</label>
+        <select id="date-format" name="date-format" value="{{ story.date_format }}">
+            
+            <option value="{{ story.date_format }}">{{ story.date_format }}</option>
+            {% for choice in DATE_FORMAT_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <fieldset id="fieldset-1">
+            <label for="exact_date">Exact Date:</label>
+            {% if story.date_exact %}
+            <input type="date" id="exact_date" name="exact_date" value="{{ story.date_exact }}"><br><br>
+            {% else %}
+            <input type="date" id="exact_date" name="exact_date"><br><br>
+            {% endif %}
+
+        </fieldset>
+
+        <fieldset id="fieldset-2">
+            <label for="session">Session:</label>
+            <select id="session" name="session">
+                {% for session in SESSION_CHOICES %}
+                <option value="{{ session.1 }}">{{ session.1 }}</option>
+                {% endfor %}
+            </select><br><br>
+        </fieldset>
+
+        <fieldset id="fieldset-3">
+            <label for="decade">Decade:</label>
+            <select id="decade" name="decade">
+                {% for decade in DECADE_CHOICES %}
+                <option value="{{ decade.1}}">{{ decade.1 }}</option>
+                {% endfor %}
+            </select><br><br>
+        </fieldset>
+
+        <fieldset id="fieldset-4">
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year" value="{{ story.year }}">
+                
+            <br><br>
+        </fieldset>
+        <fieldset id="fieldset-5">
+            <label for="month">Month:</label>
+            <select id="month" name="month">
+				{% for month in MONTH_CHOICES %}
+                <option value="{{ month.1 }}">{{ month.1 }}</option>
+                {% endfor %}
+			</select><br><br>
+        </fieldset>
+        <fieldset id="fieldset-6">
+            <legend>Date Range</legend>
+            <label for="date-range-start">Start Date:</label>
+            <input type="text" id="date-range-start" name="date-range-start">
+        
+            <br><br>
+        
+            <label for="date-range-end">End Date:</label>
+            <input type="text" id="date-range-end" name="date-range-end">
+        
+            <br><br>
+        </fieldset>
+        <div class="form-group">
+            {{ form.as_p}}
+            {{ form.media }}
+        </div>
+        
+
+		<input type="submit" value="Submit">
+	</form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            const dateFormatSelect = document.getElementById("date-format");
+            const exactDateField = document.getElementById("exact_date");
+            const sessionField = document.getElementById("session");
+            const decadeField = document.getElementById("decade");
+            const yearField = document.getElementById("year");
+            const monthField = document.getElementById("month");
+            const dateRangeStart = document.getElementById("date-range-start");
+            const dateRangeEnd = document.getElementById("date-range-end");
+            function toggleDateFields() {
+            if (dateFormatSelect.value == 1) { // exact date format
+                exactDateField.required = true;
+                exactDateField.disabled = false;
+                sessionField.required = false;
+                sessionField.disabled = true;
+                decadeField.required = false;
+                decadeField.disabled = true;
+                yearField.required = false;
+                yearField.disabled = true;
+                monthField.required = false;
+                monthField.disabled = true;
+                dateRangeStart.required =false;
+                dateRangeStart.disabled = true;
+                dateRangeEnd.required =false;
+                dateRangeEnd.disabled = true;
+            } else { // other date formats
+                exactDateField.required = false;
+                exactDateField.disabled = true;
+                sessionField.required = false;
+                sessionField.disabled = true;
+                decadeField.required = false;
+                decadeField.disabled = true;
+                yearField.required = false;
+                yearField.disabled = true;
+                monthField.required = false;
+                monthField.disabled = true;
+                dateRangeStart.required =false;
+                dateRangeStart.disabled = true;
+                dateRangeEnd.required =false;
+                dateRangeEnd.disabled = true;
+                switch(dateFormatSelect.value) {
+                case "2": // session
+                    sessionField.required = true;
+                    sessionField.disabled = false;
+                    {% comment %} decadeField.required = false;
+                    decadeField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "3": // decade
+                    
+                    decadeField.required = true;
+                    decadeField.disabled = false;
+                 {% comment %}    sessionField.required = false;
+                    sessionField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "4": // year
+                    yearField.required = true;
+                    yearField.disabled = false;
+                    {% comment %} sessionField.required = false;
+                    sessionField.disabled = false;
+                    decadeField.required = false;
+                    decadeField.disabled = false;
+                    
+                    monthField.required = false;
+                    monthField.disabled = false;
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "5": // month
+                    monthField.required = true;
+                    monthField.disabled = false;
+                    {% comment %} sessionField.required = false;
+                    sessionField.disabled = false;
+                    decadeField.required = false;
+                    decadeField.disabled = false;
+                    yearField.required = false;
+                    yearField.disabled = false;
+                   
+                    dateRangeStart.required =false;
+                    dateRangeStart.disabled = true;
+                    dateRangeEnd.required =false;
+                    dateRangeEnd.disabled = true; {% endcomment %}
+                    break;
+                case "6": // daterange
+                  {% comment %}   sessionField.required = false;
+                    sessionField.disabled = true;
+                    decadeField.required = false;
+                    decadeField.disabled = true;
+                    yearField.required = false;
+                    yearField.disabled = true;
+                    monthField.required = false;
+                    monthField.disabled = true; {% endcomment %}
+                    dateRangeStart.required =true;
+                    dateRangeStart.disabled = false;
+                    dateRangeEnd.required =true;
+                    dateRangeEnd.disabled = false;
+                    break;
+                }
+            }
+            }
+
+            dateFormatSelect.addEventListener("change", toggleDateFields);
+            toggleDateFields(); // set initial state based on the default selected value
+
+        </script>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 1);
+        L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=ObmhcyIVPHpLuSAuaCKz', {
+            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+        }).addTo(map);
+
+        var geocoder = L.Control.geocoder().on('markgeocode', function(event) {
+            var center = event.geocode.center;
+            L.marker(center).addTo(map);
+            map.setView(center, map.getZoom());
+            var result = event.geocode;
+            var latlng = result.center;
+            var latlng = result.center.toString().replace(/^latlng\(/i, '').replace(/\)$/, '');
+            var address = result.name + ', ' + result.properties.address.city;
+            document.getElementById("address").value = address;
+            document.getElementById("coordinates").value = latlng;
+            document.getElementById("coordinatessearch").value = latlng;
+        }).addTo(map);
+            
+
+        var drawnFeatures = new L.FeatureGroup();
+        map.addLayer(drawnFeatures);
+        
+        var locationData = [];
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnFeatures,
+                remove: false
+            },
+            draw: {
+                polygon: {
+                    shapeOptions: {
+                        color: 'blue'
+                    },
+
+                    drawError: {
+                        color: 'red',
+                        timeout: 1000
+                    },
+                },
+                polyline: {
+                    shapeOptions: {
+                        color: 'green'
+                    },
+                },
+                rectangle: {
+                    shapeOptions: {
+                        color: 'orange'
+                    },
+                },
+                circle: {
+                    shapeOptions: {
+                        color: 'red'
+                    },
+                },
+            },
+        });
+        map.addControl(drawControl);
+
+        map.on("draw:created", function (e) {
+            var type = e.layerType;
+            var layer = e.layer;
+            drawnFeatures.addLayer(layer);
+
+            if (type == 'circle') {
+                var radius = layer.getRadius();
+                console.log(radius);
+                document.getElementById("radius").value = radius;
+            }
+           
+            layer.bindPopup('<p>' +  JSON.stringify(layer.toGeoJSON().geometry.coordinates) + '</p>');
+            
+            var coordinates = JSON.stringify(layer.toGeoJSON().geometry.coordinates);
+            var locationType = JSON.stringify(layer.toGeoJSON().geometry.type);
+            
+            document.getElementById("coordinates").value = coordinates;
+            document.getElementById("type").value = locationType.replace(/'/g, '');
+
+            var location = layer.toGeoJSON();
+            locationData.push(location);
+            var locationDataStr = JSON.stringify(locationData);
+
+            document.getElementById("locations").value = locationDataStr;
+
+            if(layer.toGeoJSON().geometry.type == "Polygon"){
+                var len=layer.toGeoJSON().geometry.coordinates[0][0][0];
+                var lats = layer.toGeoJSON().geometry.coordinates[0][0][1];
+                console.log(len);
+                console.log(lats);
+                ReverseGeocoding(len, lats);
+            }
+            if(layer.toGeoJSON().geometry.type == "LineString"){
+                var len = layer.toGeoJSON().geometry.coordinates[0][0];
+                var lats = layer.toGeoJSON().geometry.coordinates[0][1];
+                console.log(len);
+                console.log(lats);
+    
+                ReverseGeocoding(len, lats);
+            }
+            if(layer.toGeoJSON().geometry.type == "Point"){
+                var len=layer.toGeoJSON().geometry.coordinates[0];
+                var lats = layer.toGeoJSON().geometry.coordinates[1];
+                console.log(len);
+                console.log(lats);
+                ReverseGeocoding(len, lats);
+            }
+        
+
+        });
+
+        function ReverseGeocoding(lon, lat) {
+            fetch('http://nominatim.openstreetmap.org/reverse?format=json&lon=' + lon + '&lat=' + lat).then(function(response) {
+              return response.json();
+            }).then(function(json) {
+              document.getElementById('address').value = json.display_name;
+            })
+          }
+
+        map.on("draw:edited", function (e) {
+            var layers = e.layers;
+            layers.eachLayer(function (layer) {
+                console.log(layer)
+                console.log(layer.toGeoJSON());
+            })
+
+        });
+    
+        map.on("draw:deleted", function (e) {
+            var layers = e.layers;
+            layers.eachLayer(function (layer) {
+                console.log(layer)
+                console.log(layer.toGeoJSON());
+            })
+        });
+
+        
+        
+    </script>
+
+{% endblock %}
+
+
+  
+
+
+
+        

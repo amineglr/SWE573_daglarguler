@@ -231,10 +231,59 @@ def addstory(request):
         return render(request, 'storyTellerApp/addstory.html', context)
 
 
+def editstories(request, id):
+    identified_story = Story.objects.get(id=id)
+    form = StoryForm()
+    DATE_FORMAT_CHOICES = (
+        (1, 'Exact Date'),
+        (2, 'Session'),
+        (3, 'Decade'),
+        (4, 'Year'),
+        (5, 'Month'),
+        (6, 'Date Range'),
+    )
+    SESSION_CHOICES = (
+        (1, 'fall'),
+        (2, 'winter'),
+        (3, 'spring'),
+        (4, 'summer'),
+    )
+    DECADE_CHOICES = (
+        (1, "2020's"),
+        (2, "2010's"),
+        (3, "2000's"),
+        (4, "1990's"),
+        (5, "1980's"),
+        (6, "1970's"),
+        (7, "1960's"),
+        (8, "1950's"),
+    )
+    MONTH_CHOICES = (
+        (1, "January"),
+        (2, "February"),
+        (3, "March"),
+        (4, "April"),
+        (5, "May"),
+        (6, "June"),
+        (7, "August"),
+        (8, "September"),
+        (9, "October"),
+        (10, "November"),
+        (11, "December"),
+    )
 
-
-def editstories(request):
-    return HttpResponse("Edit Stories")
+    if request.user != identified_story.user:
+        messages.error(request, "You do not have permission to edit this story.")
+        return redirect('home_page')
+    
+    return render(request, 'storyTellerApp/editstory.html', 
+                  {'DATE_FORMAT_CHOICES': DATE_FORMAT_CHOICES, 
+                   'SESSION_CHOICES': SESSION_CHOICES, 
+                   'DECADE_CHOICES':DECADE_CHOICES, 
+                   'MONTH_CHOICES': MONTH_CHOICES, 
+                   "story": identified_story, 
+                   "story_tags" : identified_story.tags.all(), 
+                   "story_locations": identified_story.locations.all()})
 
 
 def signup(request):
