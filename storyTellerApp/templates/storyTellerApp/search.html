@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
+    <link rel="stylesheet" href="{% static 'storyTellerApp/storypreview.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+
+{% endblock %} 
+
+{% block content %}
+    <header id="main-navigation">
+        <h1>StoryTeller</h1>
+        <nav><a href="{% url "home_page" %}"> Home</a></nav>
+        <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
+        <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
+        <nav><a href=""> Liked Stories</a></nav>
+        <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
+        <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
+        <nav><a href="{% url "signout" %}"> Logout </a></nav>
+        <form action ="/search" method="POST">
+            {% csrf_token %}
+            <div class="left-side">
+                    <input type="text" name="search" placeholder="Search..">
+                    <button type="submit"><i class="material-icons">search</i></button>
+            </div>
+        </form>
+    </header>
+        
+        <div style="margin-right: 10rem;">
+            <div class="container">
+                <div class="row ng-scope">
+                    <div class="col-md-3 col-md-push-9" id="result-title">
+                        
+                        <h4>Search Results</h4>
+                        <br>
+                    
+                    </div>
+                    <div class="col-md-9 col-md-pull-3" style="list-style: none;">
+                    
+                        {% for users in username_profile_list %}
+                        <section class="search-result-item" style ="margin-left: 10rem">
+                            <a class="image-link" href="/profile/{{users.user}}"><img class="image" src="{{users.profile_picture.url}}">
+                            </a>
+                            <div class="search-result-item-body">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <h4 class="search-result-item-heading"><a href="/profile/{{users.user}}"><b>@{{users.user}}</b></a></h4>
+                                        
+                                        <p class="description">{{users.bio}}</p>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </section>
+                        {% endfor %}
+                        <section id="all-posts" style="margin-right: 10rem;">
+                            <ul>
+                                {% for story in story_title_object %}
+                                {% include "storyTellerApp/includes/story_preview.html"%}
+                                {% endfor %}
+                                {% for story in story_tag_object %}
+                                {% include "storyTellerApp/includes/story_preview.html"%}
+                                {% endfor %}
+                                {% for story in story_location_object %}
+                                {% include "storyTellerApp/includes/story_preview.html"%}
+                                {% endfor %}
+                                {% for story in story_user_object %}
+                                {% include "storyTellerApp/includes/story_preview.html"%}
+                                {% endfor %}
+                                
+                            </ul>
+                        
+                        </section>
+                        
+                        
+                        
+                        
+                    
+                    </div>
+                </div>
+            </div>
+            <style>
+            
+                
+            
+            .search-results-count {
+                margin-top: 10px
+            }
+
+            .search-result-item {
+                
+                background-color: #fff;
+                border-radius: 4px
+            }
+
+            .search-result-item:after,
+            .search-result-item:before {
+                content: " ";
+                display: table
+            }
+
+            .search-result-item:after {
+                clear: both
+            }
+
+            .search-result-item .image-link {
+                display: block;
+                overflow: hidden;
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px
+            }
+
+            @media (min-width:768px) {
+                .search-result-item .image-link {
+                    display: inline-block;
+                    margin: -20px 0 -20px -20px;
+                    float: left;
+                    width: 200px
+                }
+            }
+
+            @media (max-width:767px) {
+                .search-result-item .image-link {
+                    max-height: 200px
+                }
+            }
+
+            .search-result-item .image {
+                max-width: 100%
+            }
+
+            .search-result-item .info {
+                margin-top: 2px;
+                font-size: 12px;
+                color: #999
+            }
+
+            .search-result-item .description {
+                font-size: 13px
+            }
+
+            .search-result-item+.search-result-item {
+                margin-top: 20px
+            }
+
+            @media (min-width:768px) {
+                .search-result-item-body {
+                    margin-left: 200px
+                }
+            }
+
+            .search-result-item-heading {
+                font-weight: 400
+            }
+
+            .search-result-item-heading>a {
+                color: #555
+            }
+
+            @media (min-width:768px) {
+                .search-result-item-heading {
+                    margin: 0
+                }
+            }
+            #result-title h4 {
+                text-align: left;
+                color: #0045e7;
+              
+              }
+            #result-title {
+                margin-top: 10rem; 
+                margin-left: 10rem;
+              }
+            </style>
+
+           
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}

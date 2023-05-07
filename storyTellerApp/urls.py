@@ -11,4 +11,5 @@ urlpatterns = [
     path("settings", views.settings, name="settings"),
     path("addstory", views.addstory, name="addstory"),
     path("mystories", views.mystories, name="mystories"),
+    path("search", views.search, name="search"),
 ]

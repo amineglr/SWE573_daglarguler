@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 {% endblock %} 
 
@@ -22,14 +23,20 @@
     <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
     <nav><a href=""> Liked Stories</a></nav>
     <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
-    <nav><a href=""> Search</a></nav>
     <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
     <nav><a href="{% url "signout" %}"> Logout </a></nav>
+    <form action ="/search" method="POST" id="search-form">
+        {% csrf_token %}
+        <div class="left-side">
+                <input type="text" name="search" placeholder="Search..">
+                <button type="submit"><i class="material-icons">search</i></button>
+        </div>
+    </form>
 </header>
 <div id="upload-stories">
     <h3>Upload a Story</h3>
 </div>
-	<form action="addstory" method="POST" enctype="multipart/form-data" id="form">
+	<form action="addstory" method="POST" enctype="multipart/form-data" id="addstroyform">
         {% csrf_token %}
 		<label for="title">Title:</label>
 		<input type="text" id="title" name="title"><br><br>

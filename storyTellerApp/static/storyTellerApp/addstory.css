@@ -36,7 +36,7 @@ body {
     color: rgb(255, 255, 255);
   }
 
-form {
+form:not(#search-form) {
     width: 80%;
     max-width: 800px;
     margin: 2rem auto 3rem auto;

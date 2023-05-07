@@ -17,6 +17,7 @@ import json
 from .forms import StoryForm
 from django.utils.html import strip_tags
 import bleach
+from itertools import chain
 # Create your views here.
 
 @login_required(login_url='login')
@@ -313,3 +314,34 @@ def settings(request):
         return redirect('settings')
     
     return render(request, "storyTellerApp/profile_settings.html", {'user_profile': user_profile})
+
+def search(request):
+    user_object = User.objects.get(username = request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    
+    if request.method == 'POST':
+        title = request.POST['search']
+        tag = request.POST['search']
+        location = request.POST['search']
+        author = request.POST['search']
+        story_title_object = Story.objects.filter(title__icontains=title)
+        story_tag_object = Story.objects.filter(tags__name__icontains=tag)
+        story_location_object = Story.objects.filter(locations__name__icontains=location)
+        story_user_object = Story.objects.filter(user__username__icontains=author)
+
+        username =request.POST['search']
+        username_object = User.objects.filter(username__icontains=username)
+        username_profile = []
+        username_profile_list = []
+
+        for users in username_object:
+            username_profile.append(users.id)
+        for ids in username_profile:
+            profile_lists = Profile.objects.filter(id_user=ids)
+            username_profile_list.append(profile_lists)
+
+
+        
+
+        username_profile_list = list(chain(*username_profile_list))
+    return render(request, "storyTellerApp/search.html", {"user_profile": user_profile, "username_profile_list": username_profile_list, "story_title_object": story_title_object, "story_tag_object": story_tag_object, "story_location_object": story_location_object,"story_user_object": story_user_object})

@@ -39,7 +39,7 @@ body {
   body {
     background-color: #e7e7e7;
 }
-input{
+input:not(#input-search){
     display: block;
     text-align: center;
     align-items: center;
@@ -86,7 +86,7 @@ button{
   
 }
 
-input[type=text] {
+input[type=text]:not(#input-search) {
     width: 100%;
     padding: 12px 20px 12px 12px;
     border: 1px solid #ccc;
@@ -106,7 +106,7 @@ label {
     display: inline-block;
   }
   
-input[type=submit] {
+input[type=submit]:not(#input-search) {
     background-color: #4d6ff9;
     color: white;
     border: none;
@@ -116,7 +116,7 @@ input[type=submit] {
     margin-left: 20rem;
   }
   
-input[type=submit]:hover {
+input[type=submit]:hover:not(#input-search) {
     background-color: #8098f7;
   }
   
