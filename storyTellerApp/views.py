@@ -7,6 +7,7 @@ from .models import Story
 from .models import Profile
 from .models import Location
 from .models import Tag
+from .models import Like
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -18,6 +19,7 @@ from .forms import StoryForm
 from django.utils.html import strip_tags
 import bleach
 from itertools import chain
+import uuid
 # Create your views here.
 
 @login_required(login_url='login')
@@ -43,6 +45,13 @@ def mystories(request):
     user_profile = Profile.objects.get(user=user_object)
     return render( request, "storyTellerApp/mystories.html", {
         "my_stories" : Story.objects.filter(user=user_profile.id_user).order_by("-created_at")
+    })
+
+def likedstories(request):
+    user_object= User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    return render( request, "storyTellerApp/likedstories.html", {
+        "liked_stories" : Story.objects.filter(liked=1).order_by("-created_at")
     })
 
 def view_story(request, id):
@@ -394,3 +403,31 @@ def search(request):
 
         username_profile_list = list(chain(*username_profile_list))
     return render(request, "storyTellerApp/search.html", {"user_profile": user_profile, "username_profile_list": username_profile_list, "story_title_object": story_title_object, "story_tag_object": story_tag_object, "story_location_object": story_location_object,"story_user_object": story_user_object})
+
+@login_required(login_url='login')   
+def like_story(request):
+    username=request.user.username
+    story_id = request.GET.get('story_id')
+    story = Story.objects.get(id=story_id)
+    story_id_str = str(story_id)
+
+    like_filter= Like.objects.filter(story_id=story_id, username=username).first()
+    
+    
+    if like_filter == None:
+        new_like= Like.objects.create(story_id=story_id, username=username)
+        new_like.save()
+        story.no_of_likes = story.no_of_likes + 1
+        story.liked = 1
+        story.save()
+        return redirect('/stories/'+story_id_str)
+    
+    else:
+        liked = 0
+        like_filter.delete()
+        story.no_of_likes = story.no_of_likes - 1
+        story.liked = 0
+        story.save()
+        return redirect('/stories/'+story_id_str)
+    
+

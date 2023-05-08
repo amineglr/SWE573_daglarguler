@@ -55,7 +55,14 @@ body {
     text-align: right;
     color: #0045e7;
 }
-
+#storyview a{
+    border-radius: 12px;
+    text-align: right;
+    color: #0045e7;
+}
+#hearticon{
+    align-items: right;
+}
 #date-type {
   border-radius: 12px;
   text-align: left;
@@ -98,4 +105,12 @@ body {
 
 #tag-area{
   margin: 2rem 1rem 2rem 1rem;
+}
+input[type="text"]{
+  padding: 8px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }

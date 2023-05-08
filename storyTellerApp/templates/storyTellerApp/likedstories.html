@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    StoryTeller
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'storyTellerApp/storypreview.css' %}">
+    <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock %} 
+
+
+{% block content %}
+<header id="main-navigation">
+    <h1>StoryTeller</h1>
+    <nav><a href="{% url "home_page" %}"> Home</a></nav>
+    <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
+    <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
+    <nav><a href="{% url "likedstories" %}"> Liked Stories</a></nav>
+    <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
+    <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
+    <nav><a href="{% url "signout" %}"> Logout </a></nav>
+    <form action ="/search" method="POST">
+        {% csrf_token %}
+        <div class="left-side">
+            <input type="text" name="search" placeholder="Search.." style="width:10rem; height:2rem;">
+            <button type="submit" style="width:3rem; height:2rem;"><i class="material-icons">search</i></button>
+        </div>
+    </form>
+</header>
+
+
+<div id="recent-stories">
+    <h3>Liked Stories</h3>
+</div>
+<section id="all-posts">
+    <ul>
+        {% for story in liked_stories %}
+            {% include "storyTellerApp/includes/story_preview.html"%}
+        {% endfor %}
+    </ul>
+
+</section>
+
+  
+
+
+
+{% endblock %}

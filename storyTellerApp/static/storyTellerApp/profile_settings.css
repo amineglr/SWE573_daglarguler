@@ -39,16 +39,11 @@ body {
   body {
     background-color: #e7e7e7;
 }
-input:not(#input-search){
+input{
     display: block;
     text-align: center;
     align-items: center;
     margin: 1.5rem 1rem 1.5rem 8rem;
-    height: 2rem;
-    width: 10rem;
-}
-
-button{
     height: 2rem;
     width: 10rem;
 }
@@ -86,12 +81,13 @@ button{
   
 }
 
-input[type=text]:not(#input-search) {
+input[type=text] {
     width: 100%;
     padding: 12px 20px 12px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+    box-sizing: border-box;
   }
 textarea {
     width: 100%;
@@ -106,7 +102,7 @@ label {
     display: inline-block;
   }
   
-input[type=submit]:not(#input-search) {
+input[type=submit] {
     background-color: #4d6ff9;
     color: white;
     border: none;
@@ -116,7 +112,7 @@ input[type=submit]:not(#input-search) {
     margin-left: 20rem;
   }
   
-input[type=submit]:hover:not(#input-search) {
+input[type=submit]:hover {
     background-color: #8098f7;
   }
   

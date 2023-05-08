@@ -100,6 +100,8 @@ class Story(models.Model):
     decade= models.CharField(choices=DECADE_CHOICES, null=True, blank=True, max_length=20)
     tags = models.ManyToManyField(Tag, blank=True)
     locations =  models.ManyToManyField(Location)
+    no_of_likes = models.IntegerField(default=0)
+    liked = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -118,9 +120,8 @@ class Story(models.Model):
 
 
 class Like(models.Model):
-    post_id = models.CharField(max_length=500)
+    story_id = models.CharField(max_length=500)
     username = models.CharField(max_length=100)
-    story = models.ForeignKey(Story, on_delete=models.CASCADE)
     def __str__(self):
         return self.username
 

@@ -1,7 +1,7 @@
 body {
   background-color: #e7e7e7;
 }
-#post {
+#post:not(#hearticon) {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,11 +14,15 @@ body {
     width: 20rem;
     height: 20rem;
  }
+
+#hearticon{
+  align-items: right;
+}
   
 #post a {
     text-decoration: none;
     transition: all 0.2s ease;
-    padding: 2rem;  
+    padding-top:4px;
 }
 
 #post img {
