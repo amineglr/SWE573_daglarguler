@@ -12,7 +12,7 @@ urlpatterns = [
     path("addstory", views.addstory, name="addstory"),
     path("editstory<slug:id>", views.editstories, name="editstory"),
     path("mystories", views.mystories, name="mystories"),
-    path("likedstories", views.likedstories, name="likedstories"),
     path("search", views.search, name="search"),
     path("like_story", views.like_story, name="like_story"),
+    path("profile/<str:pk>", views.profile, name="profile"),
 ]

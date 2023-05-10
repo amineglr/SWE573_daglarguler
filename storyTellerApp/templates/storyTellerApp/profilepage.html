@@ -8,12 +8,11 @@
 {% block css_files %}
     <link rel="stylesheet" href="{% static 'storyTellerApp/storypreview.css' %}">
     <link rel="stylesheet" href="{% static 'storyTellerApp/home.css' %}">
+    <link rel="stylesheet" href="{% static 'storyTellerApp/profilepage.css' %}">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 {% endblock %} 
-
-
-
 {% block content %}
 <header id="main-navigation">
     <h1>StoryTeller</h1>
@@ -34,20 +33,37 @@
     </form>
 </header>
 
-<div id="recent-stories">
-    <h3>Recent Stories</h3>
-</div>
-<section id="all-posts">
-    <ul>
-        {% for story in stories %}
-            {% include "storyTellerApp/includes/story_preview.html"%}
-        {% endfor %}
-        
-    </ul>
-
+<section id="profileview">
+    <div class="row">
+        <div class="column">
+            <img src="{{user_profile.profile_picture.url}}"/>
+            <h4> {{ user_profile.bio}} </h4>
+        </div>
+        <div class="column">
+            <h4> {{ user_profile.first_name }} </h4>
+            <h4> {{ user_profile.last_name}} </h4>
+            <h4> {{ user_profile.email}} </h4>
+            <h4> @{{ user_profile.username}} </h4>
+           
+        </div>
+    </div>
+   
+    <section id="profile-posts" >
+        <h3>Stories</h3>
+        <ul>
+            {% for story in story %}
+                {% include "storyTellerApp/includes/story_preview.html"%}
+            {% endfor %}
+        </ul>
+    
+    </section>
+    
 </section>
 
   
+
+
+
 
 
 

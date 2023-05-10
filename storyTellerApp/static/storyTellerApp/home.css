@@ -71,6 +71,9 @@ body {
   color: #2e2e2e;
   margin: 3rem 0;
 }
+#all-posts h3 {
+  color: #0045e7;
+}
 
 a{
   text-decoration: none;

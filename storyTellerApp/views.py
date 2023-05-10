@@ -47,56 +47,60 @@ def mystories(request):
         "my_stories" : Story.objects.filter(user=user_profile.id_user).order_by("-created_at")
     })
 
-def likedstories(request):
-    user_object= User.objects.get(username=request.user.username)
-    user_profile = Profile.objects.get(user=user_object)
-    return render( request, "storyTellerApp/likedstories.html", {
-        "liked_stories" : Story.objects.filter(liked=1).order_by("-created_at")
-    })
-
 def view_story(request, id):
     identified_story = Story.objects.get(id=id)
-    return render(request, "storyTellerApp/story.html", {"story": identified_story, "story_tags" : identified_story.tags.all(), "story_locations": identified_story.locations.all()})
+    
+    user_profile = Profile.objects.get(user=request.user)
+    if user_profile.likedstories.filter(id=id).exists():
+        liked=1
+    else:
+        liked=0
+
+    return render(request, "storyTellerApp/story.html", {"liked":liked ,"story": identified_story, "story_tags" : identified_story.tags.all(), "story_locations": identified_story.locations.all()})
 
 
 def addstory(request):
     form = StoryForm()
     DATE_FORMAT_CHOICES = (
-        (1, 'Exact Date'),
-        (2, 'Session'),
-        (3, 'Decade'),
-        (4, 'Year'),
-        (5, 'Month'),
-        (6, 'Date Range'),
+        (1, 'choose a date type'),
+        (2, 'Exact Date'),
+        (3, 'Session'),
+        (4, 'Decade'),
+        (5, 'Year'),
+        (6, 'Month'),
+        (7, 'Date Range'),
     )
     SESSION_CHOICES = (
-        (1, 'fall'),
-        (2, 'winter'),
-        (3, 'spring'),
-        (4, 'summer'),
+        (1, 'choose a session'),
+        (2, 'fall'),
+        (3, 'winter'),
+        (4, 'spring'),
+        (5, 'summer'),
     )
     DECADE_CHOICES = (
-        (1, "2020's"),
-        (2, "2010's"),
-        (3, "2000's"),
-        (4, "1990's"),
-        (5, "1980's"),
-        (6, "1970's"),
-        (7, "1960's"),
-        (8, "1950's"),
+        (1, "choose a decade"),
+        (2, "2020's"),
+        (3, "2010's"),
+        (4, "2000's"),
+        (5, "1990's"),
+        (6, "1980's"),
+        (7, "1970's"),
+        (8, "1960's"),
+        (9, "1950's"),
     )
     MONTH_CHOICES = (
-        (1, "January"),
-        (2, "February"),
-        (3, "March"),
-        (4, "April"),
-        (5, "May"),
-        (6, "June"),
-        (7, "August"),
-        (8, "September"),
-        (9, "October"),
-        (10, "November"),
-        (11, "December"),
+        (1, "choose a month"),
+        (2, "January"),
+        (3, "February"),
+        (4, "March"),
+        (5, "April"),
+        (6, "May"),
+        (7, "June"),
+        (8, "August"),
+        (9, "September"),
+        (10, "October"),
+        (11, "November"),
+        (12, "December"),
     )
 
     if request.method == 'POST':
@@ -119,19 +123,30 @@ def addstory(request):
         geolocator = Nominatim(user_agent="my_app")  
         loc_data_str = request.POST.get("locations", '[]')
         # date
-        date_format = request.POST["date-format"]
+        # date_format = request.POST["date-format"]
         if 'exact_date' in request.POST:
             exact_date = request.POST['exact_date']
+            if exact_date== "":
+                exact_date=None
+            else:
+                exact_date = request.POST['exact_date']
+
         else:
             exact_date = None
         if 'session' in request.POST:
             session = request.POST['session']
-           
+            if session== "choose a session":
+                session=None
+            else:
+                session = request.POST['session']
         else:
             session = None
         if 'decade' in request.POST:
             decade = request.POST['decade']
-           
+            if decade== "choose a decade":
+                decade=None
+            else:
+                decade = request.POST['decade']
         else:
             decade = None
         if 'year' in request.POST:
@@ -140,7 +155,10 @@ def addstory(request):
             year = None
         if 'month' in request.POST:
             month = request.POST['month']
-           
+            if month== "choose a month":
+                month=None
+            else:
+                month = request.POST['month']
         else:
             month = None
         if 'date-range-start' in request.POST:
@@ -218,7 +236,7 @@ def addstory(request):
         new_story= Story.objects.create(
             user=user,
             content= content, 
-            date_format=date_format,
+            date_format=1,
             session = session,
             month = month,
             year = year,
@@ -228,6 +246,7 @@ def addstory(request):
             decade = decade,
             title=title,
             )
+        print(new_story)
         new_story.save()
         new_story.locations.set(locations)
         new_story.tags.set(tagList)
@@ -382,10 +401,21 @@ def search(request):
         tag = request.POST['search']
         location = request.POST['search']
         author = request.POST['search']
+        session= request.POST['search']
+        decade= request.POST['search']
+        exact_date= request.POST['search']
+        month=request.POST['search']
+        year = request.POST['search']
+
         story_title_object = Story.objects.filter(title__icontains=title)
         story_tag_object = Story.objects.filter(tags__name__icontains=tag)
         story_location_object = Story.objects.filter(locations__name__icontains=location)
         story_user_object = Story.objects.filter(user__username__icontains=author)
+        story_session_object = Story.objects.filter(session__icontains=session)
+        story_decade_object = Story.objects.filter(decade__icontains=decade)
+        story_exact_date_object = Story.objects.filter(date_exact__icontains=exact_date)
+        story_month_object = Story.objects.filter(month__icontains=month)
+        story_year_object = Story.objects.filter(year__icontains=year)
 
         username =request.POST['search']
         username_object = User.objects.filter(username__icontains=username)
@@ -398,36 +428,60 @@ def search(request):
             profile_lists = Profile.objects.filter(id_user=ids)
             username_profile_list.append(profile_lists)
 
-
-        
-
         username_profile_list = list(chain(*username_profile_list))
-    return render(request, "storyTellerApp/search.html", {"user_profile": user_profile, "username_profile_list": username_profile_list, "story_title_object": story_title_object, "story_tag_object": story_tag_object, "story_location_object": story_location_object,"story_user_object": story_user_object})
+    return render(request, "storyTellerApp/search.html", 
+                  {"user_profile": user_profile, 
+                   "username_profile_list": username_profile_list, 
+                   "story_title_object": story_title_object, 
+                   "story_tag_object": story_tag_object,
+                   "story_location_object": story_location_object,
+                   "story_user_object": story_user_object,
+                   "story_session_object" : story_session_object,
+                   "story_decade_object":story_decade_object,
+                   "story_exact_date_object":story_exact_date_object,
+                   "story_month_object":story_month_object,
+                   "story_year_object" :story_year_object,
+                   })
 
 @login_required(login_url='login')   
 def like_story(request):
+    user_object= User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
     username=request.user.username
     story_id = request.GET.get('story_id')
     story = Story.objects.get(id=story_id)
     story_id_str = str(story_id)
 
     like_filter= Like.objects.filter(story_id=story_id, username=username).first()
+    likedstories = []
     
     
     if like_filter == None:
         new_like= Like.objects.create(story_id=story_id, username=username)
         new_like.save()
         story.no_of_likes = story.no_of_likes + 1
-        story.liked = 1
         story.save()
+        if user_profile.likedstories.filter(id=story_id).exists():
+                user_profile.likedstories.remove(story)
+        else:
+                user_profile.likedstories.add(story)
+
         return redirect('/stories/'+story_id_str)
     
     else:
-        liked = 0
         like_filter.delete()
         story.no_of_likes = story.no_of_likes - 1
-        story.liked = 0
         story.save()
+        if user_profile.likedstories.filter(id=story_id).exists():
+                user_profile.likedstories.remove(story)
+        else:
+                user_profile.likedstories.add(story)
         return redirect('/stories/'+story_id_str)
     
+        
 
+    
+def profile(request, pk):
+    user_profile = Profile.objects.get(user=request.user)
+    return render(request, "storyTellerApp/profilepage.html", {'user_profile': user_profile, 'story':Story.objects.filter(user=user_profile.id_user).order_by("-created_at")})
+    

@@ -21,7 +21,7 @@
     <nav><a href="{% url "home_page" %}"> Home</a></nav>
     <nav><a href="{% url "stories_page" %}"> Stories</a></nav>
     <nav><a href="{% url "mystories" %}"> My Stories</a></nav>
-    <nav><a href="{% url "likedstories" %}"> Liked Stories</a></nav>
+   
     <nav><a href="{% url "addstory" %}"> Add Stories</a></nav>
     <nav><a href="{% url "settings" %}"> Profile Settings</a></nav>
     <nav><a href="{% url "signout" %}"> Logout </a></nav>
@@ -59,12 +59,12 @@
         
         <div id="map"></div>
         <br><br>
-		<label for="date-format">Date Format:</label>
+		{% comment %} <label for="date-format">Date Format:</label>
         <select id="date-format" name="date-format">
             {% for choice in DATE_FORMAT_CHOICES %}
                 <option value="{{ choice.0 }}">{{ choice.1 }}</option>
             {% endfor %}
-        </select>
+        </select> {% endcomment %}
 
         
 
@@ -126,7 +126,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             const dateFormatSelect = document.getElementById("date-format");
             const exactDateField = document.getElementById("exact_date");
@@ -141,66 +141,71 @@
                 exactDateField.required = true;
                 exactDateField.disabled = false;
                 sessionField.required = false;
-                sessionField.disabled = true;
+                sessionField.disabled = false;
                 decadeField.required = false;
-                decadeField.disabled = true;
+                decadeField.disabled = false;
                 yearField.required = false;
-                yearField.disabled = true;
+                yearField.disabled = false;
                 monthField.required = false;
-                monthField.disabled = true;
+                monthField.disabled = false;
                 dateRangeStart.required =false;
-                dateRangeStart.disabled = true;
+                dateRangeStart.disabled = false;
                 dateRangeEnd.required =false;
-                dateRangeEnd.disabled = true;
+                dateRangeEnd.disabled = false;
             } else { // other date formats
                 exactDateField.required = false;
                 exactDateField.disabled = true;
                 sessionField.required = false;
-                sessionField.disabled = true;
+                sessionField.disabled = false;
                 decadeField.required = false;
-                decadeField.disabled = true;
+                decadeField.disabled = false;
                 yearField.required = false;
-                yearField.disabled = true;
+                yearField.disabled = false;
                 monthField.required = false;
-                monthField.disabled = true;
+                monthField.disabled = false;
                 dateRangeStart.required =false;
-                dateRangeStart.disabled = true;
+                dateRangeStart.disabled = false;
                 dateRangeEnd.required =false;
-                dateRangeEnd.disabled = true;
+                dateRangeEnd.disabled = false;
                 switch(dateFormatSelect.value) {
                 case "2": // session
+                    exactDateField.required = false;
+                    exactDateField.disabled = true;
                     sessionField.required = true;
                     sessionField.disabled = false;
-                    {% comment %} decadeField.required = false;
+                    decadeField.required = false;
                     decadeField.disabled = false;
                     yearField.required = false;
                     yearField.disabled = false;
                     monthField.required = false;
                     monthField.disabled = false;
                     dateRangeStart.required =false;
-                    dateRangeStart.disabled = true;
+                    dateRangeStart.disabled = false;
                     dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = true; {% endcomment %}
+                    dateRangeEnd.disabled = false;
                     break;
                 case "3": // decade
-                    
+                    exactDateField.required = false;
+                    exactDateField.disabled = true;
                     decadeField.required = true;
                     decadeField.disabled = false;
-                 {% comment %}    sessionField.required = false;
+                    sessionField.required = false;
                     sessionField.disabled = false;
                     yearField.required = false;
                     yearField.disabled = false;
                     monthField.required = false;
                     monthField.disabled = false;
                     dateRangeStart.required =false;
-                    dateRangeStart.disabled = true;
+                    dateRangeStart.disabled = false;
                     dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = true; {% endcomment %}
+                    dateRangeEnd.disabled = false; 
                     break;
                 case "4": // year
+                    exactDateField.required = false;
+                    exactDateField.disabled = true;
                     yearField.required = true;
                     yearField.disabled = false;
-                    {% comment %} sessionField.required = false;
+                    sessionField.required = false;
                     sessionField.disabled = false;
                     decadeField.required = false;
                     decadeField.disabled = false;
@@ -208,14 +213,16 @@
                     monthField.required = false;
                     monthField.disabled = false;
                     dateRangeStart.required =false;
-                    dateRangeStart.disabled = true;
+                    dateRangeStart.disabled = false;
                     dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = true; {% endcomment %}
+                    dateRangeEnd.disabled = false; 
                     break;
                 case "5": // month
+                    exactDateField.required = false;
+                    exactDateField.disabled = true;
                     monthField.required = true;
                     monthField.disabled = false;
-                    {% comment %} sessionField.required = false;
+                    sessionField.required = false;
                     sessionField.disabled = false;
                     decadeField.required = false;
                     decadeField.disabled = false;
@@ -223,19 +230,21 @@
                     yearField.disabled = false;
                    
                     dateRangeStart.required =false;
-                    dateRangeStart.disabled = true;
+                    dateRangeStart.disabled = false;
                     dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = true; {% endcomment %}
+                    dateRangeEnd.disabled = false; 
                     break;
                 case "6": // daterange
-                  {% comment %}   sessionField.required = false;
-                    sessionField.disabled = true;
+                    exactDateField.required = false;
+                    exactDateField.disabled = true;
+                    sessionField.required = false;
+                    sessionField.disabled = false;
                     decadeField.required = false;
-                    decadeField.disabled = true;
+                    decadeField.disabled = false;
                     yearField.required = false;
-                    yearField.disabled = true;
+                    yearField.disabled = false;
                     monthField.required = false;
-                    monthField.disabled = true; {% endcomment %}
+                    monthField.disabled = false;
                     dateRangeStart.required =true;
                     dateRangeStart.disabled = false;
                     dateRangeEnd.required =true;
@@ -248,7 +257,7 @@
             dateFormatSelect.addEventListener("change", toggleDateFields);
             toggleDateFields(); // set initial state based on the default selected value
 
-        </script>
+    </script> {% endcomment %}
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
