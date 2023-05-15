@@ -16,8 +16,9 @@
     color: #0045e7;
 }
 
-
-
+#profileview b {
+  color: #0045e7;
+}
   
 #profileview article img {
     width: 12rem;

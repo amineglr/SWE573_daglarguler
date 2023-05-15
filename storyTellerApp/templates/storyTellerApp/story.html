@@ -32,7 +32,33 @@
 </header>
     
     <section id="storyview">
-        <h2> {{ story.title }} </h2>
+        <div class="row" style="display: flex; ">
+            <div class="column" style="flex: 1; text-align: left;">
+                <h2> {{ story.title }} </h2>
+                <a href="{%url "profile" story.user %}">@{{ story.user }}</a>
+            </div>
+            <div class="column" style="margin-top: 2.5rem; flex: 1; text-align: right;">
+                <form action="/deletestory" method="POST" >
+                    {% csrf_token %}
+                    <input type="hidden" value="{{story.id}}" name="story" />
+                    <input type="hidden" value="{{story.user}}" name="user" />
+                    {% if showdelete == True %}
+                    <a data-ripple=""><button type="submit" style="background-color: #6895fe; border: #0045e7; height: 2rem; width: 3rem; border-radius: 5px;"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M16,6 L16,4 C16,3.44771525 15.5522847,3 15,3 L9,3 C8.44771525,3 8,3.44771525 8,4 L8,6 L16,6 Z" />
+                            <path d="M21,6 L3,6 L3,21 L21,21 L21,6 Z" />
+                            <path d="M10,11 L10,17" />
+                            <path d="M14,11 L14,17" />
+                          </svg>
+                          
+                    </button></a>
+                    {% endif %}
+                </form>
+            </div>
+
+        </div>
+       
         <a href="/like_story?story_id={{story.id}}" class="flex items-center space-x-2">
             <div class="p-2 rounded-full text-black" style="margin-left:10px;" id="hearticon" style="align-items: right;">
                     {%if liked == 0 %}
@@ -51,12 +77,6 @@
             </div>
         </a>
         <article>
-            <a href="{%url "profile" story.user.id %}"><adress>{{ story.user }}</adress></a>
-            <div>
-                {%for locations in story_locations %}
-                <span class="locations">{{locations.name}} </span>
-                {% endfor %}
-            </div>
             <div>
                 {% if story.date_exact %}
                 <p>Date: {{ story.date_exact }}</p>
@@ -81,6 +101,11 @@
         <div id="date-type">
             
         </div>
+        <div id="location">
+            {%for locations in story_locations %}
+            <span class="locations">{{locations.name}} </span>
+            {% endfor %}
+        </div>
         <div id="tag-area"> 
             {%for tag in story_tags %}
             <span class="tag">{{tag.name}} </span>
@@ -89,5 +114,71 @@
         </div>
         <p> {{ story.content|safe}} </p>
     </section>
+    <section id="comment-form">
+        <form action="/addcomment" method="POST">
+            {% csrf_token %}
+            <p>@{{ story.user }} </p>
+                
+            <input type="hidden" name="story" id="story" value="{{story}}">
+            <input type="hidden" name="storyid" id="storyid" value="{{story.id}}">
+            <input type="hidden" name="user" id="user" value="{{story.user}}">
+            
+                <textarea id="comment" name="comment" placeholder="Add comment.." style="height:100px; width:100%; font-size:18px;"></textarea>
+            <br>
+            <br>
+            <button type="submit" style="background-color: #6895fe; border: #0045e7; height: 3rem; width: 10rem; border-radius: 5px;">Add Comment</button>
+
+        </form>
+    </section>
+    <section style=" align-items: center; margin-left:2rem">
+        {% if not story.comments.all %}
+            <p>No Comments Yet</p>
+        {% else%}
+            <ul style=" list-style: none;
+            align-items: center;
+            width: 95%;">
+                {% for comment in story.comments.all %}
+                  <section id="commentview" style="margin: 1rem auto 1rem auto;
+                  padding: 1rem;
+                  width: 100%;
+                  max-width: 90rem;
+                  background-color: white;
+                  border-radius: 12px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);">
+                   <li> 
+                        <div class="row" style="display: flex;">
+                            <div class="column" style="flex: 1; text-align: left;">
+                                @{{ comment.username}} 
+                            </div>
+                            <div class="column" style=" flex: 1; text-align: right;">
+                                {{ comment.created_at}} 
+                            </div>
+                        </div>
+                    
+                     </li>
+                   <br>
+                    <li> {{ comment.content}} </li>
+                  
+                   </section>
+                {% endfor%}
+            </ul>
+        {% endif %}
+    </section>
+   
+
+ {% comment %}    <section id="comment-form">
+        <h2>Your Comment</h2>
+        <form action="{% url "story" story.id %}">
+            {% csrf_token %}
+            {% for form_field in comment_form %}
+            <div class="form-control">
+                {{ form_field.label_tag}}
+                {{ form_field}}
+                {{ form_field.errors}}
+            </div>
+            {% endfor %}
+            <button>Save Comment</button>
+        </form>
+    </section> {% endcomment %}
 
 {% endblock %}

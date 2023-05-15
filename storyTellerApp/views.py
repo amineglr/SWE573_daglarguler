@@ -8,6 +8,8 @@ from .models import Profile
 from .models import Location
 from .models import Tag
 from .models import Like
+from .models import Follower
+from .models import Comment
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -16,14 +18,29 @@ from geopy.geocoders import Nominatim
 from django.contrib.gis.geos import Point, Polygon, LineString
 import json
 from .forms import StoryForm
+from .forms import CommentForm
 from django.utils.html import strip_tags
 import bleach
 from itertools import chain
 import uuid
+from itertools import chain
 # Create your views here.
 
 @login_required(login_url='login')
 def home_page(request):
+    user_following_list = []
+    feed = []
+    user_following= Follower.objects.filter(follower=request.user.username)
+    for users in user_following:
+        user_following_list.append(users.user)
+    for usernames in user_following_list:
+        user_profile = Profile.objects.get(username=usernames)
+        identified_userid= user_profile.id_user
+        feed_list = Story.objects.filter(user =identified_userid)
+        feed.append(feed_list)
+    
+    feed_list = list(chain(*feed))
+
     latest_stories = Story.objects.all().order_by("-created_at")[:10]
     for story in latest_stories:
         cleaned_text = bleach.clean(story.content, tags=[], strip=True)
@@ -31,13 +48,27 @@ def home_page(request):
         story.raw_text = strip_tags(text_without_images)
         if len(story.raw_text) > 100:
             story.raw_text = story.raw_text[:100] + '...'
+    for story in feed_list:
+        cleaned_text = bleach.clean(story.content, tags=[], strip=True)
+        text_without_images = bleach.clean(cleaned_text, tags=['p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'br'], strip=True)
+        story.raw_text = strip_tags(text_without_images)
+        if len(story.raw_text) > 100:
+            story.raw_text = story.raw_text[:100] + '...'
         
-    return render(request, "storyTellerApp/home.html",{ "stories" : latest_stories} )
+    return render(request, "storyTellerApp/home.html",{ "stories" : latest_stories, "followed_stories": feed_list } )
 
 
 def stories(request):
+    all_stories = Story.objects.all().order_by("-created_at")
+    for story in all_stories:
+        cleaned_text = bleach.clean(story.content, tags=[], strip=True)
+        text_without_images = bleach.clean(cleaned_text, tags=['p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'br'], strip=True)
+        story.raw_text = strip_tags(text_without_images)
+        if len(story.raw_text) > 100:
+            story.raw_text = story.raw_text[:100] + '...'
+
     return render( request, "storyTellerApp/stories.html", {
-        "all_stories" : Story.objects.all().order_by("-created_at")
+        "all_stories" : all_stories
     })
 
 def mystories(request):
@@ -51,13 +82,45 @@ def view_story(request, id):
     identified_story = Story.objects.get(id=id)
     
     user_profile = Profile.objects.get(user=request.user)
+    
     if user_profile.likedstories.filter(id=id).exists():
         liked=1
     else:
         liked=0
+    if identified_story.user == user_profile.user:
+        showdelete =True
+    else:
+         showdelete =False
+     
+    return render(request, "storyTellerApp/story.html", {"showdelete":showdelete,"liked":liked ,"story": identified_story, "story_tags" : identified_story.tags.all(), "story_locations": identified_story.locations.all()})
 
-    return render(request, "storyTellerApp/story.html", {"liked":liked ,"story": identified_story, "story_tags" : identified_story.tags.all(), "story_locations": identified_story.locations.all()})
+def deletestory(request):
+    if request.method =='POST':
+        storyid = request.POST['story']
+        identified_story = Story.objects.get(id=storyid)
+        identified_story.delete()
+        return redirect('home_page')
+    else:
+        return redirect('home_page')
+    
+def addcomment(request):
+    if request.method == 'POST':
+        story=request.POST['story']
+        storyid=request.POST['storyid']
+        username =request.POST['user']
+        content =request.POST['comment']
+        identified_story = Story.objects.get(id=storyid)
 
+        new_comment= Comment.objects.create(
+                username= username,
+                content= content,
+                story = identified_story,
+            )
+        print(new_comment)
+        new_comment.save()
+        return redirect('view_story', id=storyid)
+    else:
+        render(request, "storyTellerApp/story.html")
 
 def addstory(request):
     form = StoryForm()
@@ -139,6 +202,7 @@ def addstory(request):
                 session=None
             else:
                 session = request.POST['session']
+                
         else:
             session = None
         if 'decade' in request.POST:
@@ -147,6 +211,7 @@ def addstory(request):
                 decade=None
             else:
                 decade = request.POST['decade']
+               
         else:
             decade = None
         if 'year' in request.POST:
@@ -159,6 +224,7 @@ def addstory(request):
                 month=None
             else:
                 month = request.POST['month']
+                
         else:
             month = None
         if 'date-range-start' in request.POST:
@@ -479,9 +545,44 @@ def like_story(request):
         return redirect('/stories/'+story_id_str)
     
         
-
-    
+   
 def profile(request, pk):
-    user_profile = Profile.objects.get(user=request.user)
-    return render(request, "storyTellerApp/profilepage.html", {'user_profile': user_profile, 'story':Story.objects.filter(user=user_profile.id_user).order_by("-created_at")})
-    
+    user_object= User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+    user_story = Story.objects.filter(user=user_profile.id_user)
+    follower = request.user.username
+    user = pk
+
+    if Follower.objects.filter(follower=follower,user=user).first():
+        button_text = 'Unfollow'
+    else: 
+        button_text = 'Follow'
+
+    user_followers=len(Follower.objects.filter(user=pk))
+    user_following=len(Follower.objects.filter(follower=pk))
+
+    return render(request, "storyTellerApp/profilepage.html", 
+                  {'user_profile': user_profile, 
+                   'user_object': user_object, 
+                   'story':Story.objects.filter(user=user_profile.id_user).order_by("-created_at"),
+                   'user_story_len': len(user_story),
+                   'button_text':button_text,
+                   'user_followers' :user_followers,
+                    'user_following': user_following })
+
+@login_required(login_url='login')      
+def follow(request):
+    if request.method =='POST':
+        follower = request.POST['follower']
+        user = request.POST['user']
+
+        if Follower.objects.filter(follower=follower, user=user).first():
+            delete_follower=Follower.objects.get(follower=follower, user=user)
+            delete_follower.delete()
+            return redirect('/profile/'+user)
+        else: 
+            new_follower = Follower.objects.create(follower=follower, user=user)
+            new_follower.save()
+            return redirect('/profile/'+user)
+    else:
+        return redirect('/')

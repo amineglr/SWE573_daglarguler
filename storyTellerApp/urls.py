@@ -15,4 +15,7 @@ urlpatterns = [
     path("search", views.search, name="search"),
     path("like_story", views.like_story, name="like_story"),
     path("profile/<str:pk>", views.profile, name="profile"),
+    path("follow", views.follow, name="follow"),
+    path("deletestory", views.deletestory, name="deletestory"),
+    path("addcomment", views.addcomment, name="addcomment"),
 ]

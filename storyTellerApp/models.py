@@ -79,13 +79,13 @@ class Story(models.Model):
     content = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
     date_format= models.IntegerField(choices=DATE_FORMAT_CHOICES,null=True, blank=True)
-    session = models.IntegerField(choices=SESSION_CHOICES,null=True, blank=True)
-    month = models.IntegerField(choices=MONTH_CHOICES,null=True, blank=True)
+    session = models.CharField(choices=SESSION_CHOICES,null=True, blank=True, max_length=100)
+    month = models.CharField(choices=MONTH_CHOICES,null=True, blank=True, max_length=100)
     year = models.CharField(max_length=100, null=True, blank=True)
     date_exact = models.DateField(null=True, blank=True)
     date_range_start= models.CharField(max_length=100, null=True, blank=True)
     date_range_end= models.CharField(max_length=100, null=True, blank=True)
-    decade= models.IntegerField(choices=DECADE_CHOICES,null=True, blank=True)
+    decade= models.CharField(choices=DECADE_CHOICES,null=True, blank=True, max_length=100)
     tags = models.ManyToManyField(Tag, blank=True)
     locations =  models.ManyToManyField(Location)
     no_of_likes = models.IntegerField(default=0)
@@ -129,20 +129,19 @@ class Like(models.Model):
         return self.username
 
 class Comment(models.Model):
-    post_id = models.CharField(max_length=500)
     username = models.CharField(max_length=100)
     content=models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="comments")
 
 
     def __str__(self):
         return self.username
 
 class Follower(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
+    user = models.CharField(max_length=100)
+    follower = models.CharField(max_length=100)
     def __str__(self):
-        return f"{self.follower.username} follows {self.user.username}"
+        return self.user
 
     

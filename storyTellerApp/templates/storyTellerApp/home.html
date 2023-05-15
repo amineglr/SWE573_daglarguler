@@ -42,13 +42,20 @@
         {% for story in stories %}
             {% include "storyTellerApp/includes/story_preview.html"%}
         {% endfor %}
-        
     </ul>
 
 </section>
+<div id="recent-stories">
+    <h3>Followed User Stories</h3>
+</div>
+<section id="all-posts">
+    <ul>
+        {% for story in followed_stories %}
+            {% include "storyTellerApp/includes/story_preview.html"%}
+        {% endfor %}
+    </ul>
 
-  
-
+</section>
 
 
 {% endblock %}

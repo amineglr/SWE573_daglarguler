@@ -15,9 +15,9 @@
             
             
             <p>
-                {{ story.user }}
+                @{{ story.user }}
             </p>
-            <h3>{{ story.title }}</h3>
+            <h3>Title: {{ story.title }}</h3>
            
           
             {% if story.date_exact %}
@@ -39,7 +39,7 @@
             <p>Decade: {{ story.decade }}</p>
             {% endif %}
            {% comment %}  <p>{% for location in story.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> {% endcomment %}
-           <p>{% for tags in story.tags.all %}{{ tags.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> 
+           <p>Tags: {% for tags in story.tags.all %} {{ tags.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> 
            <p>
             {{ story.raw_text }}
         </p>
