@@ -1,3 +1,4 @@
+from  datetime import datetime
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse
@@ -184,7 +185,7 @@ def addstory(request):
         # date
         date_format = request.POST["date-format"]
 
-        if date_format == "2" :
+        if date_format == "2" or date_format == "1":
             if 'exact_date' in request.POST:
                 exact_date = request.POST['exact_date']
                 if exact_date== "":
@@ -240,7 +241,7 @@ def addstory(request):
             else:
                 month = None
                 month_end = None
-        elif date_format == "2":
+        elif date_format == "3":
             if 'exact_date-start' in request.POST:
                 exact_date = request.POST['exact_date-start']
                 if exact_date== "":
@@ -497,6 +498,7 @@ def search(request):
     user_profile = Profile.objects.get(user=user_object)
     
     if request.method == 'POST':
+        search_query = request.POST['search']
         title = request.POST['search']
         tag = request.POST['search']
         location = request.POST['search']
@@ -506,15 +508,22 @@ def search(request):
         exact_date= request.POST['search']
         month=request.POST['search']
         year = request.POST['search']
-        date = request.POST['search']
+        
+        # Filter based on decade
+        if search_query.endswith('s') and search_query[:-1].isdigit():
+            decade_year = int(search_query[:-1])
+            start_year = decade_year
+            end_year = decade_year + 9
+            story_decade_object = Story.objects.filter(year__range=(start_year, end_year))
+        else:
+            story_decade_object = []
 
+        story_exact_date_object = Story.objects.filter(date_exact__icontains=exact_date)
         story_title_object = Story.objects.filter(title__icontains=title)
         story_tag_object = Story.objects.filter(tags__name__icontains=tag)
         story_location_object = Story.objects.filter(locations__name__icontains=location)
         story_user_object = Story.objects.filter(user__username__icontains=author)
         story_session_object = Story.objects.filter(session__icontains=session)
-        story_decade_object = Story.objects.filter(decade__icontains=decade)
-        story_exact_date_object = Story.objects.filter(date_exact__icontains=exact_date)
         story_month_object = Story.objects.filter(month__icontains=month)
         story_year_object = Story.objects.filter(year__icontains=year)
 
