@@ -79,22 +79,35 @@
         <article>
             <div>
                 {% if story.date_exact %}
-                <p>Date: {{ story.date_exact }}</p>
+                <p>Start Date: {{ story.date_exact }}</p>
                 {% endif %}
                 {% if story.session %}
-                <p>Session: {{ story.session }}</p>
+                <p>Start Session: {{ story.session }}</p>
                 {% endif %}
                 {% if story.month %}
-                <p>Month: {{ story.month }}</p>
+                <p>Start Month: {{ story.month }}</p>
                 {% endif %}
                 {% if story.year %}
-                <p>Year: {{ story.year }}</p>
-                {% endif %}
-                {% if story.date_range_start %}
-                <p>Date Range: {{ story.date_range_start }} - {{ story.date_range_end }}</p>
+                <p>Start Year: {{ story.year }}</p>
                 {% endif %}
                 {% if story.decade %}
-                <p>Decade: {{story.decade}}</p>
+                <p>Start Decade: {{story.decade}}</p>
+                {% endif %}
+
+                {% if story.date_exact_end %}
+                <p>End Date: {{ story.date_exact_end }}</p>
+                {% endif %}
+                {% if story.session_end %}
+                <p>End Session: {{ story.session_end }}</p>
+                {% endif %}
+                {% if story.month_end %}
+                <p>End Month: {{ story.month_end }}</p>
+                {% endif %}
+                {% if story.year_end %}
+                <p>End Year: {{ story.year_end }}</p>
+                {% endif %}
+                {% if story.decade_end %}
+                <p>End Decade: {{story.decade_end}}</p>
                 {% endif %}
             </div>
         </article>

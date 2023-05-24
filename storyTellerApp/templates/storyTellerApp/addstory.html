@@ -59,64 +59,139 @@
         
         <div id="map"></div>
         <br><br>
-		{% comment %} <label for="date-format">Date Format:</label>
-        <select id="date-format" name="date-format">
+        <label for="date-format">Date Format:</label>
+        <select id="date-format" name="date-format" onchange="showFields()">
             {% for choice in DATE_FORMAT_CHOICES %}
-                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-            {% endfor %}
-        </select> {% endcomment %}
+            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+        {% endfor %}
+        </select>
+      
+        <div id="exact-date-fields">
+            <fieldset id="fieldset-1">
+                <label for="exact_date">Exact Date:</label>
+                <input type="datetime-local" id="exact_date" name="exact_date"><br><br>
+            </fieldset>
+    
+            <fieldset id="fieldset-2">
+                <label for="session">Session:</label>
+                <select id="session" name="session">
+                    {% for session in SESSION_CHOICES %}
+                    <option value="{{ session.1 }}">{{ session.1 }}</option>
+                    {% endfor %}
+                </select><br><br>
+            </fieldset>
+    
+            <fieldset id="fieldset-3">
+                <label for="decade">Decade:</label>
+                <select id="decade" name="decade">
+                    {% for decade in DECADE_CHOICES %}
+                    <option value="{{ decade.1}}">{{ decade.1 }}</option>
+                    {% endfor %}
+                </select><br><br>
+            </fieldset>
+    
+            <fieldset id="fieldset-4">
+                <label for="year">Year:</label>
+                <input type="text" id="year" name="year">
+                    
+                <br><br>
+            </fieldset>
+            <fieldset id="fieldset-5">
+                <label for="month">Month:</label>
+                <select id="month" name="month">
+                    {% for month in MONTH_CHOICES %}
+                    <option value="{{ month.1 }}">{{ month.1 }}</option>
+                    {% endfor %}
+                </select><br><br>
+            </fieldset>
+        </div>
 
-        
+        <div id="date-range-fields" style="display: none;">
+            <div class="row" style="display: flex; ">
+                <div class="column" style="flex: 1; text-align: left;"> 
+                    <fieldset id="fieldset-1">
+                        <label for="exact_date-start">Start Date:</label>
+                        <input type="datetime-local" id="exact_date-start" name="exact_date-start"><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-2">
+                        <label for="session-start">Start Session:</label>
+                        <select id="session-start" name="session-start">
+                            {% for session in SESSION_CHOICES %}
+                            <option value="{{ session.1 }}">{{ session.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-3">
+                        <label for="decade-start">Start Decade:</label>
+                        <select id="decade-start" name="decade-start">
+                            {% for decade in DECADE_CHOICES %}
+                            <option value="{{ decade.1}}">{{ decade.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-4">
+                        <label for="year-start">Start Year:</label>
+                        <input type="text" id="year-start" name="year-start">
+                            
+                        <br><br>
+                    </fieldset>
+                    <fieldset id="fieldset-5">
+                        <label for="month-start">Start Month:</label>
+                        <select id="month-start" name="month-start">
+                            {% for month in MONTH_CHOICES %}
+                            <option value="{{ month.1 }}">{{ month.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+                    
+                </div>
+                <div class="column" style="flex: 1; text-align: left;"> 
+                    <fieldset id="fieldset-1">
+                        <label for="exact_date-end">End Date:</label>
+                        <input type="datetime-local" id="exact_date-end" name="exact_date-end"><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-2">
+                        <label for="session-end">End Session:</label>
+                        <select id="session-end" name="session-end">
+                            {% for session in SESSION_CHOICES %}
+                            <option value="{{ session.1 }}">{{ session.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-3">
+                        <label for="decade-end">End Decade:</label>
+                        <select id="decade-end" name="decade-end">
+                            {% for decade in DECADE_CHOICES %}
+                            <option value="{{ decade.1}}">{{ decade.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+            
+                    <fieldset id="fieldset-4">
+                        <label for="year-end">End Year:</label>
+                        <input type="text" id="year-end" name="year-end">
+                            
+                        <br><br>
+                    </fieldset>
+                    <fieldset id="fieldset-5">
+                        <label for="month-end">End Month:</label>
+                        <select id="month-end" name="month-end">
+                            {% for month in MONTH_CHOICES %}
+                            <option value="{{ month.1 }}">{{ month.1 }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                    </fieldset>
+                    
+                </div>
+            </div>
+           
+          </div>
 
-        <fieldset id="fieldset-1">
-            <label for="exact_date">Exact Date:</label>
-            <input type="date" id="exact_date" name="exact_date"><br><br>
-        </fieldset>
-
-        <fieldset id="fieldset-2">
-            <label for="session">Session:</label>
-            <select id="session" name="session">
-                {% for session in SESSION_CHOICES %}
-                <option value="{{ session.1 }}">{{ session.1 }}</option>
-                {% endfor %}
-            </select><br><br>
-        </fieldset>
-
-        <fieldset id="fieldset-3">
-            <label for="decade">Decade:</label>
-            <select id="decade" name="decade">
-                {% for decade in DECADE_CHOICES %}
-                <option value="{{ decade.1}}">{{ decade.1 }}</option>
-                {% endfor %}
-            </select><br><br>
-        </fieldset>
-
-        <fieldset id="fieldset-4">
-            <label for="year">Year:</label>
-            <input type="text" id="year" name="year">
-                
-            <br><br>
-        </fieldset>
-        <fieldset id="fieldset-5">
-            <label for="month">Month:</label>
-            <select id="month" name="month">
-				{% for month in MONTH_CHOICES %}
-                <option value="{{ month.1 }}">{{ month.1 }}</option>
-                {% endfor %}
-			</select><br><br>
-        </fieldset>
-        <fieldset id="fieldset-6">
-            <legend>Date Range</legend>
-            <label for="date-range-start">Start Date:</label>
-            <input type="text" id="date-range-start" name="date-range-start">
-        
-            <br><br>
-        
-            <label for="date-range-end">End Date:</label>
-            <input type="text" id="date-range-end" name="date-range-end">
-        
-            <br><br>
-        </fieldset>
         <div class="form-group">
             {{ form.as_p}}
             {{ form.media }}
@@ -125,139 +200,23 @@
 
 		<input type="submit" value="Submit">
 	</form>
-
-    {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            const dateFormatSelect = document.getElementById("date-format");
-            const exactDateField = document.getElementById("exact_date");
-            const sessionField = document.getElementById("session");
-            const decadeField = document.getElementById("decade");
-            const yearField = document.getElementById("year");
-            const monthField = document.getElementById("month");
-            const dateRangeStart = document.getElementById("date-range-start");
-            const dateRangeEnd = document.getElementById("date-range-end");
-            function toggleDateFields() {
-            if (dateFormatSelect.value == 1) { // exact date format
-                exactDateField.required = true;
-                exactDateField.disabled = false;
-                sessionField.required = false;
-                sessionField.disabled = false;
-                decadeField.required = false;
-                decadeField.disabled = false;
-                yearField.required = false;
-                yearField.disabled = false;
-                monthField.required = false;
-                monthField.disabled = false;
-                dateRangeStart.required =false;
-                dateRangeStart.disabled = false;
-                dateRangeEnd.required =false;
-                dateRangeEnd.disabled = false;
-            } else { // other date formats
-                exactDateField.required = false;
-                exactDateField.disabled = true;
-                sessionField.required = false;
-                sessionField.disabled = false;
-                decadeField.required = false;
-                decadeField.disabled = false;
-                yearField.required = false;
-                yearField.disabled = false;
-                monthField.required = false;
-                monthField.disabled = false;
-                dateRangeStart.required =false;
-                dateRangeStart.disabled = false;
-                dateRangeEnd.required =false;
-                dateRangeEnd.disabled = false;
-                switch(dateFormatSelect.value) {
-                case "2": // session
-                    exactDateField.required = false;
-                    exactDateField.disabled = true;
-                    sessionField.required = true;
-                    sessionField.disabled = false;
-                    decadeField.required = false;
-                    decadeField.disabled = false;
-                    yearField.required = false;
-                    yearField.disabled = false;
-                    monthField.required = false;
-                    monthField.disabled = false;
-                    dateRangeStart.required =false;
-                    dateRangeStart.disabled = false;
-                    dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = false;
-                    break;
-                case "3": // decade
-                    exactDateField.required = false;
-                    exactDateField.disabled = true;
-                    decadeField.required = true;
-                    decadeField.disabled = false;
-                    sessionField.required = false;
-                    sessionField.disabled = false;
-                    yearField.required = false;
-                    yearField.disabled = false;
-                    monthField.required = false;
-                    monthField.disabled = false;
-                    dateRangeStart.required =false;
-                    dateRangeStart.disabled = false;
-                    dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = false; 
-                    break;
-                case "4": // year
-                    exactDateField.required = false;
-                    exactDateField.disabled = true;
-                    yearField.required = true;
-                    yearField.disabled = false;
-                    sessionField.required = false;
-                    sessionField.disabled = false;
-                    decadeField.required = false;
-                    decadeField.disabled = false;
-                    
-                    monthField.required = false;
-                    monthField.disabled = false;
-                    dateRangeStart.required =false;
-                    dateRangeStart.disabled = false;
-                    dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = false; 
-                    break;
-                case "5": // month
-                    exactDateField.required = false;
-                    exactDateField.disabled = true;
-                    monthField.required = true;
-                    monthField.disabled = false;
-                    sessionField.required = false;
-                    sessionField.disabled = false;
-                    decadeField.required = false;
-                    decadeField.disabled = false;
-                    yearField.required = false;
-                    yearField.disabled = false;
-                   
-                    dateRangeStart.required =false;
-                    dateRangeStart.disabled = false;
-                    dateRangeEnd.required =false;
-                    dateRangeEnd.disabled = false; 
-                    break;
-                case "6": // daterange
-                    exactDateField.required = false;
-                    exactDateField.disabled = true;
-                    sessionField.required = false;
-                    sessionField.disabled = false;
-                    decadeField.required = false;
-                    decadeField.disabled = false;
-                    yearField.required = false;
-                    yearField.disabled = false;
-                    monthField.required = false;
-                    monthField.disabled = false;
-                    dateRangeStart.required =true;
-                    dateRangeStart.disabled = false;
-                    dateRangeEnd.required =true;
-                    dateRangeEnd.disabled = false;
-                    break;
-                }
-            }
-            }
-
-            dateFormatSelect.addEventListener("change", toggleDateFields);
-            toggleDateFields(); // set initial state based on the default selected value
-
-    </script> {% endcomment %}
+    <script>
+        function showFields() {
+          var selectBox = document.getElementById("date-format");
+          var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    
+          var exactDateFields = document.getElementById("exact-date-fields");
+          var dateRangeFields = document.getElementById("date-range-fields");
+    
+          if (selectedValue === "2") {
+            exactDateFields.style.display = "block";
+            dateRangeFields.style.display = "none";
+          } else if (selectedValue === "3") {
+            exactDateFields.style.display = "none";
+            dateRangeFields.style.display = "block";
+          }
+        }
+      </script>
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>

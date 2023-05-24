@@ -127,11 +127,7 @@ def addstory(request):
     DATE_FORMAT_CHOICES = (
         (1, 'choose a date type'),
         (2, 'Exact Date'),
-        (3, 'Session'),
-        (4, 'Decade'),
-        (5, 'Year'),
-        (6, 'Month'),
-        (7, 'Date Range'),
+        (3, 'Date Range'),
     )
     SESSION_CHOICES = (
         (1, 'choose a session'),
@@ -186,55 +182,145 @@ def addstory(request):
         geolocator = Nominatim(user_agent="my_app")  
         loc_data_str = request.POST.get("locations", '[]')
         # date
-        # date_format = request.POST["date-format"]
-        if 'exact_date' in request.POST:
-            exact_date = request.POST['exact_date']
-            if exact_date== "":
-                exact_date=None
-            else:
-                exact_date = request.POST['exact_date']
+        date_format = request.POST["date-format"]
 
-        else:
-            exact_date = None
-        if 'session' in request.POST:
-            session = request.POST['session']
-            if session== "choose a session":
-                session=None
+        if date_format == "2" :
+            if 'exact_date' in request.POST:
+                exact_date = request.POST['exact_date']
+                if exact_date== "":
+                    exact_date=None
+                    exact_date_end =None
+
+                else:
+                    exact_date = request.POST['exact_date']
+                    exact_date_end= None
+
             else:
+                exact_date = None
+                exact_date_end =None
+            if 'session' in request.POST:
                 session = request.POST['session']
-                
-        else:
-            session = None
-        if 'decade' in request.POST:
-            decade = request.POST['decade']
-            if decade== "choose a decade":
-                decade=None
+                if session== "choose a session":
+                    session=None
+                    session_end = None
+                else:
+                    session = request.POST['session']
+                    session_end = None
+                    
             else:
+                session = None
+                session_end = None
+            if 'decade' in request.POST:
                 decade = request.POST['decade']
-               
-        else:
-            decade = None
-        if 'year' in request.POST:
-            year = request.POST['year']
-        else:
-            year = None
-        if 'month' in request.POST:
-            month = request.POST['month']
-            if month== "choose a month":
-                month=None
-            else:
-                month = request.POST['month']
+                if decade== "choose a decade":
+                    decade=None
+                    decade_end=None
+                else:
+                    decade = request.POST['decade']
+                    decade_end = None
                 
-        else:
-            month = None
-        if 'date-range-start' in request.POST:
-            date_range_start = request.POST['date-range-start']
-        else:
-            date_range_start = None
-        if 'date-range-end' in request.POST:
-            date_range_end = request.POST['date-range-end']
-        else:
-            date_range_end = None
+            else:
+                decade = None
+                decade_end = None
+            if 'year' in request.POST:
+                year = request.POST['year']
+                year_end= None
+            else:
+                year = None
+                year_end =None
+            if 'month' in request.POST:
+                month = request.POST['month']
+                if month== "choose a month":
+                    month=None
+                    month_end =None
+                else:
+                    month = request.POST['month']
+                    month_end = None
+                    
+            else:
+                month = None
+                month_end = None
+        elif date_format == "2":
+            if 'exact_date-start' in request.POST:
+                exact_date = request.POST['exact_date-start']
+                if exact_date== "":
+                    exact_date=None
+                else:
+                    exact_date = request.POST['exact_date-start']
+
+            else:
+                exact_date = None
+            if 'session-start' in request.POST:
+                session = request.POST['session-start']
+                if session== "choose a session":
+                    session=None
+                else:
+                    session = request.POST['session-start']
+                    
+            else:
+                session = None
+            if 'decade-start' in request.POST:
+                decade = request.POST['decade-start']
+                if decade== "choose a decade":
+                    decade=None
+                else:
+                    decade = request.POST['decade-start']
+                
+            else:
+                decade = None
+            if 'year-start' in request.POST:
+                year = request.POST['year-start']
+            else:
+                year = None
+            if 'month-start' in request.POST:
+                month = request.POST['month-start']
+                if month== "choose a month":
+                    month=None
+                else:
+                    month = request.POST['month-start']
+                    
+            else:
+                month = None
+            if 'exact_date-end' in request.POST:
+                exact_date_end = request.POST['exact_date-end']
+                if exact_date_end== "":
+                    exact_date_end=None
+                else:
+                    exact_date_end = request.POST['exact_date-end']
+
+            else:
+                exact_date_end = None
+            if 'session-end' in request.POST:
+                session_end = request.POST['session-end']
+                if session_end== "choose a session":
+                    session_end=None
+                else:
+                    session_end = request.POST['session-end']
+                    
+            else:
+                session_end = None
+            if 'decade-end' in request.POST:
+                decade_end = request.POST['decade-end']
+                if decade_end== "choose a decade":
+                    decade_end=None
+                else:
+                    decade_end = request.POST['decade-end']
+                
+            else:
+                decade_end = None
+            if 'year-end' in request.POST:
+                year_end = request.POST['year-end']
+            else:
+                year_end = None
+            if 'month-end' in request.POST:
+                month_end = request.POST['month-end']
+                if month_end== "choose a month":
+                    month_end=None
+                else:
+                    month_end = request.POST['month-end']
+                    
+            else:
+                month_end = None
 
         if loc_data_str:
             loc_data = json.loads(loc_data_str)
@@ -302,14 +388,18 @@ def addstory(request):
         new_story= Story.objects.create(
             user=user,
             content= content, 
-            date_format=1,
+            date_format=date_format,
             session = session,
             month = month,
             year = year,
             date_exact= exact_date,
-            date_range_start = date_range_start,
-            date_range_end = date_range_end,
             decade = decade,
+            session_end = session_end,
+            month_end = month_end,
+            year_end = year_end,
+            date_exact_end= exact_date_end,
+            decade_end = decade_end,
+
             title=title,
             )
         print(new_story)
@@ -416,6 +506,7 @@ def search(request):
         exact_date= request.POST['search']
         month=request.POST['search']
         year = request.POST['search']
+        date = request.POST['search']
 
         story_title_object = Story.objects.filter(title__icontains=title)
         story_tag_object = Story.objects.filter(tags__name__icontains=tag)

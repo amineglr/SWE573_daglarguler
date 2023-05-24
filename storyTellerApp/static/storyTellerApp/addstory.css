@@ -86,7 +86,7 @@ label {
 }
   
   /* Style for the form input fields */
-input[type="text"], textarea, select ,input[type="date"]{
+input[type="text"], textarea, select ,input[type="datetime-local"]{
     padding: 8px;
     margin-bottom: 15px;
     width: 100%;
@@ -122,18 +122,27 @@ input[type="submit"]:hover {
 }
 
 #session,
+#session-end,
+#session-start,
 #year,
+#year-start,
+#year-end,
 #decade,
-#month {
+#decade-start,
+#decade-end,
+#month,
+#month-start,
+#month-end
+{
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	margin-right: 10px;
 	width: 150px;
     margin-bottom: 20px;
-}
+}s
 
-#exact_date {
+#exact_date, #exact_date-start, #exact_date-end {
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;

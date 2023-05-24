@@ -36,6 +36,21 @@
             {% if story.decade %}
             <p>Decade: {{ story.decade }}</p>
             {% endif %}
+            {% if story.date_exact_end %}
+            <p>End Date: {{ story.date_exact_end }}</p>
+            {% endif %}
+            {% if story.session_end %}
+            <p>End Session: {{ story.session_end }}</p>
+            {% endif %}
+            {% if story.month_end %}
+            <p>End Month: {{ story.month_end }}</p>
+            {% endif %}
+            {% if story.year_end %}
+            <p>End Year: {{ story.year_end }}</p>
+            {% endif %}
+            {% if story.decade_end %}
+            <p>End Decade: {{story.decade_end}}</p>
+            {% endif %}
            {% comment %}  <p>{% for location in story.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> {% endcomment %}
            <p>Tags: {% for tags in story.tags.all %} {{ tags.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> 
            <p>

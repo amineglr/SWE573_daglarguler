@@ -34,11 +34,7 @@ class Story(models.Model):
     DATE_FORMAT_CHOICES = (
         (1, 'choose a date type'),
         (2, 'Exact Date'),
-        (3, 'Session'),
-        (4, 'Decade'),
-        (5, 'Year'),
-        (6, 'Month'),
-        (7, 'Date Range'),
+        (3, 'Date Range'),
     )
     SESSION_CHOICES = (
         (1, 'choose a session'),
@@ -79,13 +75,19 @@ class Story(models.Model):
     content = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
     date_format= models.IntegerField(choices=DATE_FORMAT_CHOICES,null=True, blank=True)
+
     session = models.CharField(choices=SESSION_CHOICES,null=True, blank=True, max_length=100)
     month = models.CharField(choices=MONTH_CHOICES,null=True, blank=True, max_length=100)
     year = models.CharField(max_length=100, null=True, blank=True)
-    date_exact = models.DateField(null=True, blank=True)
-    date_range_start= models.CharField(max_length=100, null=True, blank=True)
-    date_range_end= models.CharField(max_length=100, null=True, blank=True)
+    date_exact = models.DateTimeField(null=True, blank=True)
     decade= models.CharField(choices=DECADE_CHOICES,null=True, blank=True, max_length=100)
+
+    session_end = models.CharField(choices=SESSION_CHOICES,null=True, blank=True, max_length=100)
+    month_end  = models.CharField(choices=MONTH_CHOICES,null=True, blank=True, max_length=100)
+    year_end  = models.CharField(max_length=100, null=True, blank=True)
+    date_exact_end  = models.DateTimeField(null=True, blank=True)
+    decade_end = models.CharField(choices=DECADE_CHOICES,null=True, blank=True, max_length=100)
+
     tags = models.ManyToManyField(Tag, blank=True)
     locations =  models.ManyToManyField(Location)
     no_of_likes = models.IntegerField(default=0)
