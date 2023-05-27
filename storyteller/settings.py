@@ -11,27 +11,23 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
-from decouple import config
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent 
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-SECRET_KEY = config("SECRET_KEY")
-DB_NAME = config("DB_NAME")
-DB_USER = config("DB_USER")
-DB_PASSWORD = config("DB_PASSWORD")
-DB_HOST = config("DB_HOST")
-DB_PORT = config("DB_PORT")
+env = environ.Env(DEBUG=(bool,False))
+environ.Env.read_env(env_file=".env")
 
-DEBUG = config("DEBUG", cast=bool)
+SECRET_KEY = env("SECRET_KEY") 
 
-ALLOWED_HOSTS = []
-
+DEBUG = env("DEBUG")
+ALLOWED_HOSTS = env.list('ALLOWED_HOST', default=['localhost', '127.0.0.1', '[::1]']) 
 
 # Application definition
 
@@ -46,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'ckeditor',
 ]
-CKEDITOR_CONFIGS = {
+CKEDITOR_CONFIGS = {     
     'default': {
         'skin': 'moono',
         # 'skin': 'office2013',
@@ -152,12 +148,12 @@ WSGI_APPLICATION = 'storyteller.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',    
+        'NAME': env('POSTGRES_DBNAME'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASS'),
+        'HOST': env('PG_HOST'),
+        'PORT': env('PG_PORT'),
     }
 }
 
@@ -198,7 +194,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
+STATICFILES_DIRS = [ 
     BASE_DIR / 'static'
 ]
 
@@ -208,8 +204,8 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-GDAL_LIBRARY_PATH = "/opt/homebrew/Cellar/gdal/3.6.4/lib/libgdal.dylib"
-GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.11.2/lib/libgeos_c.1.17.2.dylib"
+GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so.20"
+# GEOS_LIBRARY_PATH = "/app/geos/3.11.2/lib/libgeos_c.1.17.2.dylib"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
