@@ -27,7 +27,7 @@ environ.Env.read_env(env_file=".env")
 SECRET_KEY = env("SECRET_KEY") 
 
 DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env.list('ALLOWED_HOST', default=['localhost', '127.0.0.1', '[::1]']) 
+ALLOWED_HOSTS = env.list('ALLOWED_HOST', default=['localhost', '127.0.0.1', '[::1]', '34.159.184.66']) 
 
 # Application definition
 
